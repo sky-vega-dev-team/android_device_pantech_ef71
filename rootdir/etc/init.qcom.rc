@@ -717,13 +717,6 @@ service vendor.ipacm-diag /system/vendor/bin/ipacm-diag
     group radio diag oem_2901
     disabled
 
-service vendor.ipacm /system/vendor/bin/ipacm
-    class main
-    user radio
-    group radio inet
-    disabled
-    writepid /dev/cpuset/system-background/tasks
-
 
 service vendor.dataqti /system/vendor/bin/qti
     class main
