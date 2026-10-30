@@ -13,3 +13,6 @@
 
 # VirtualKeys
 /sys/board_properties/virtualkeys.*         u:object_r:sysfs_virtualkeys:s0
+
+# Modem APN profile provisioning
+/(vendor|system/vendor)/bin/init\.ef71\.apn\.sh                                         u:object_r:qti_init_shell_exec:s0

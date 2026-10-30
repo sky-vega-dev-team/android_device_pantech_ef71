@@ -241,6 +241,7 @@ PRODUCT_PACKAGES += \
     ueventd.qcom.rc \
     init.qcom.usb.sh \
     init.qcom.sensors.sh \
+    init.ef71.apn.sh \
     init.qcom.early_boot.sh \
     loggy.sh
 

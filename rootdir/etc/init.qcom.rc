@@ -850,6 +850,14 @@ on property:sys.boot_completed=1
     start qcom-post-boot
     start qti-testscripts
     start config-zram
+    start vendor.ef71-apn
+
+service vendor.ef71-apn /vendor/bin/init.ef71.apn.sh
+    class late_start
+    user radio
+    group radio
+    disabled
+    oneshot
 
 service vendor.atfwd /vendor/bin/ATFWD-daemon
     class late_start
