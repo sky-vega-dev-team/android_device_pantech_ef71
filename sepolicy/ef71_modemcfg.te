@@ -1,0 +1,13 @@
+# Writes the per carrier modem EFS sets over /dev/diag (init.ef71.apn.sh)
+type ef71_modemcfg, domain;
+type ef71_modemcfg_exec, exec_type, vendor_file_type, file_type;
+
+diag_use(ef71_modemcfg)
+
+# Output goes back to the calling script
+allow ef71_modemcfg qti_init_shell:fd use;
+allow ef71_modemcfg qti_init_shell:fifo_file w_file_perms;
+
+# Backup of the EFS files it replaces
+allow ef71_modemcfg vendor_radio_data_file:dir rw_dir_perms;
+allow ef71_modemcfg vendor_radio_data_file:file create_file_perms;

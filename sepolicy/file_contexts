@@ -16,3 +16,4 @@
 
 # Modem APN profile provisioning
 /(vendor|system/vendor)/bin/init\.ef71\.apn\.sh                                         u:object_r:qti_init_shell_exec:s0
+/(vendor|system/vendor)/bin/ef71_modemcfg                                                u:object_r:ef71_modemcfg_exec:s0
