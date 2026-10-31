@@ -6327,7 +6327,11 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
     staticInfo.update(ANDROID_TONEMAP_MAX_CURVE_POINTS,
             &gCamCapability[cameraId]->max_tone_map_curve_points, 1);
 
-    uint8_t timestampSource = ANDROID_SENSOR_INFO_TIMESTAMP_SOURCE_UNKNOWN;
+    /* ef71: the camera driver stamps frames with the boot time clock. With
+     * REALTIME the camera service shifts them to the monotonic clock for
+     * consumers like the video encoder; with UNKNOWN recordings got the
+     * suspend time added to their length. */
+    uint8_t timestampSource = ANDROID_SENSOR_INFO_TIMESTAMP_SOURCE_REALTIME;
     staticInfo.update(ANDROID_SENSOR_INFO_TIMESTAMP_SOURCE,
             &timestampSource, 1);
 
