@@ -84,14 +84,15 @@ grep -q 'feature name="android.hardware.telephony.cdma"' \
 setprop persist.vendor.ef71.hide_cdma $hide_cdma
 [ "$hidden" = "$hide_cdma" ] || reboot_for="$reboot_for cdma"
 
+# Remember which SIM the last reboot was for: never loop on one that a
+# reboot did not fix, but still reboot once for the next SIM change
 if [ -z "$reboot_for" ]; then
     setprop persist.vendor.ef71.sim_reboots 0
-elif [ "$(getprop persist.vendor.ef71.sim_reboots)" = 1 ]; then
-    # Never loop: the last reboot did not apply it
+elif [ "$(getprop persist.vendor.ef71.sim_reboots)" = "$carrier" ]; then
     log -t ef71-apn "still not applied after a reboot:$reboot_for"
 else
     log -t ef71-apn "SIM changed, rebooting to apply:$reboot_for"
-    setprop persist.vendor.ef71.sim_reboots 1
+    setprop persist.vendor.ef71.sim_reboots $carrier
     setprop vendor.ef71.sim_reboot 1
     exit 0
 fi
