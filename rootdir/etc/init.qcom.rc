@@ -852,6 +852,15 @@ on property:sys.boot_completed=1
     start config-zram
     start vendor.ef71-apn
 
+# LG U+ USIMs carry a CSIM app that never gets ready now that the carrier has no
+# CDMA, and Android keeps such a card NOT_READY when the CDMA feature is on.
+# init.ef71.apn.sh records the SIM type; this applies before system_server starts.
+on property:persist.vendor.ef71.hide_cdma=1
+    mount none /vendor/etc/ef71_nocdma.xml /system/etc/permissions/android.hardware.telephony.cdma.xml bind
+
+on property:vendor.ef71.cdma_reboot=1
+    setprop sys.powerctl reboot,ef71-cdma
+
 service vendor.ef71-apn /vendor/bin/init.ef71.apn.sh
     class late_start
     user radio

@@ -1,1 +1,4 @@
 persist.camera.                    u:object_r:camera_prop:s0
+persist.vendor.ef71.hide_cdma      u:object_r:ef71_cdma_prop:s0
+persist.vendor.ef71.cdma_reboots   u:object_r:ef71_cdma_prop:s0
+vendor.ef71.cdma_reboot            u:object_r:ef71_cdma_prop:s0

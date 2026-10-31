@@ -26,6 +26,30 @@ for i in 1 2 3 4 5 6 7 8 9 10 11 12; do
     sleep 5
 done
 
+# LG U+ cards need the CDMA feature hidden (see init.qcom.rc). The feature is
+# read once at boot, so reboot when the SIM type changed since the last boot.
+if [ -n "$imsi" ]; then
+    case "$imsi" in
+        45006*) hide_cdma=1 ;;
+        *) hide_cdma=0 ;;
+    esac
+    hidden=1
+    grep -q 'feature name="android.hardware.telephony.cdma"' \
+            /system/etc/permissions/android.hardware.telephony.cdma.xml && hidden=0
+    setprop persist.vendor.ef71.hide_cdma $hide_cdma
+    if [ "$hidden" = "$hide_cdma" ]; then
+        setprop persist.vendor.ef71.cdma_reboots 0
+    elif [ "$(getprop persist.vendor.ef71.cdma_reboots)" = 1 ]; then
+        # Never loop: the reboot did not apply it, so leave things as they are
+        log -t ef71-apn "hide_cdma=$hide_cdma still not applied after a reboot"
+    else
+        log -t ef71-apn "SIM type changed, rebooting to apply hide_cdma=$hide_cdma"
+        setprop persist.vendor.ef71.cdma_reboots 1
+        setprop vendor.ef71.cdma_reboot 1
+        exit 0
+    fi
+fi
+
 case "$imsi" in
     45002*|45004*|45008*) apn=lte.ktfwing.com ;;
     45005*|45011*) apn=lte.sktelecom.com ;;

@@ -1,1 +1,4 @@
 allow qti_init_shell sysfs:file { rw_file_perms };
+
+# init.ef71.apn.sh hides the CDMA feature for LG U+ SIMs
+set_prop(qti_init_shell, ef71_cdma_prop)
