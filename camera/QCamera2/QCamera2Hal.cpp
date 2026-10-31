@@ -32,28 +32,28 @@
 #include "HAL3/QCamera3VendorTags.h"
 
 static hw_module_t camera_common = {
-    tag: HARDWARE_MODULE_TAG,
-    module_api_version: CAMERA_MODULE_API_VERSION_2_4,
-    hal_api_version: HARDWARE_HAL_API_VERSION,
-    id: CAMERA_HARDWARE_MODULE_ID,
-    name: "QCamera Module",
-    author: "Qualcomm Innovation Center Inc",
-    methods: &qcamera::QCamera2Factory::mModuleMethods,
-    dso: NULL,
-    reserved:  {0}
+    .tag = HARDWARE_MODULE_TAG,
+    .module_api_version = CAMERA_MODULE_API_VERSION_2_4,
+    .hal_api_version = HARDWARE_HAL_API_VERSION,
+    .id = CAMERA_HARDWARE_MODULE_ID,
+    .name = "QCamera Module",
+    .author = "Qualcomm Innovation Center Inc",
+    .methods = &qcamera::QCamera2Factory::mModuleMethods,
+    .dso = NULL,
+    .reserved = {0}
 };
 
 camera_module_t HAL_MODULE_INFO_SYM = {
-    common: camera_common,
-    get_number_of_cameras: qcamera::QCamera2Factory::get_number_of_cameras,
-    get_camera_info: qcamera::QCamera2Factory::get_camera_info,
-    set_callbacks: qcamera::QCamera2Factory::set_callbacks,
-    get_vendor_tag_ops: qcamera::QCamera3VendorTags::get_vendor_tag_ops,
+    .common = camera_common,
+    .get_number_of_cameras = qcamera::QCamera2Factory::get_number_of_cameras,
+    .get_camera_info = qcamera::QCamera2Factory::get_camera_info,
+    .set_callbacks = qcamera::QCamera2Factory::set_callbacks,
+    .get_vendor_tag_ops = qcamera::QCamera3VendorTags::get_vendor_tag_ops,
     /* ef71 runs the HAL3 path. The camera provider probes open_legacy by
        opening and closing a HAL1 device at startup, which crashes in the
        HAL1 deferred init, so do not offer it. */
-    open_legacy: NULL,
-    set_torch_mode: qcamera::QCamera2Factory::set_torch_mode,
-    init : NULL,
-    reserved: {0}
+    .open_legacy = NULL,
+    .set_torch_mode = qcamera::QCamera2Factory::set_torch_mode,
+    .init = NULL,
+    .reserved = {0}
 };

@@ -20,8 +20,6 @@ LOCAL_CFLAGS += -DCONFIG_MACH_MSM8937_EF71S
 include device/pantech/ef71/camera/pantech_flags.mk
 LOCAL_CFLAGS += $(EF71_PANTECH_FLAGS)
 LOCAL_CFLAGS += -include device/pantech/ef71/camera/ef71_camera_features.h
-# Stock 6.0 sources: keep their warnings as warnings
-LOCAL_CFLAGS += -Wno-error -Wno-tautological-pointer-compare
 
 ifeq ($(strip $(TARGET_USES_ION)),true)
     LOCAL_CFLAGS += -DUSE_ION
@@ -54,7 +52,7 @@ ifneq (1,$(filter 1,$(shell echo "$$(( $(PLATFORM_SDK_VERSION) >= 17 ))" )))
   LOCAL_CFLAGS += -include bionic/libc/kernel/common/linux/un.h
 endif
 
-LOCAL_CFLAGS += -Wall -Wextra
+LOCAL_CFLAGS += -Wall -Wextra -Werror
 
 LOCAL_SRC_FILES := $(MM_CAM_FILES)
 

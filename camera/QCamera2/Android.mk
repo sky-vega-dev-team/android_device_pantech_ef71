@@ -39,7 +39,7 @@ LOCAL_SRC_FILES += \
         HAL/QCameraParametersIntf.cpp \
         HAL/QCameraThermalAdapter.cpp
 
-LOCAL_CFLAGS := -Wall -Wextra -Wno-unused-parameter -Wno-unused-variable -Wno-implicit-fallthrough
+LOCAL_CFLAGS := -Wall -Wextra -Werror -Wno-unused-parameter -Wno-unused-variable -Wno-implicit-fallthrough
 
 # System header file path prefix
 LOCAL_CFLAGS += -DSYSTEM_HEADER_PREFIX=sys
@@ -47,8 +47,6 @@ LOCAL_CFLAGS += -DSYSTEM_HEADER_PREFIX=sys
 include device/pantech/ef71/camera/pantech_flags.mk
 LOCAL_CFLAGS += $(EF71_PANTECH_FLAGS)
 LOCAL_CFLAGS += -include device/pantech/ef71/camera/ef71_camera_features.h
-# Stock 6.0 sources: keep their warnings as warnings
-LOCAL_CFLAGS += -Wno-error -Wno-tautological-pointer-compare
 
 # Kernel headers
 LOCAL_CFLAGS += -DCONFIG_MACH_MSM8937_EF71S

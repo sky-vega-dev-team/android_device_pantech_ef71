@@ -315,15 +315,15 @@ const QCamera3HardwareInterface::QCameraMap<
 };
 
 camera3_device_ops_t QCamera3HardwareInterface::mCameraOps = {
-    initialize:                         QCamera3HardwareInterface::initialize,
-    configure_streams:                  QCamera3HardwareInterface::configure_streams,
-    register_stream_buffers:            NULL,
-    construct_default_request_settings: QCamera3HardwareInterface::construct_default_request_settings,
-    process_capture_request:            QCamera3HardwareInterface::process_capture_request,
-    get_metadata_vendor_tag_ops:        NULL,
-    dump:                               QCamera3HardwareInterface::dump,
-    flush:                              QCamera3HardwareInterface::flush,
-    reserved:                           {0},
+    .initialize = QCamera3HardwareInterface::initialize,
+    .configure_streams = QCamera3HardwareInterface::configure_streams,
+    .register_stream_buffers = NULL,
+    .construct_default_request_settings = QCamera3HardwareInterface::construct_default_request_settings,
+    .process_capture_request = QCamera3HardwareInterface::process_capture_request,
+    .get_metadata_vendor_tag_ops = NULL,
+    .dump = QCamera3HardwareInterface::dump,
+    .flush = QCamera3HardwareInterface::flush,
+    .reserved = {0},
 };
 
 /*===========================================================================
@@ -2599,7 +2599,6 @@ void QCamera3HardwareInterface::handleBatchMetadata(
         pthread_mutex_unlock(&mMutex);
     }
 
-done_batch_metadata:
     /* BufDone metadata buffer */
     if (free_and_bufdone_meta_buf) {
         mMetadataChannel->bufDone(metadata_buf);

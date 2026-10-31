@@ -11853,7 +11853,6 @@ int32_t QCameraParameters::commitParamChanges()
 QCameraParameters::QCameraReprocScaleParam::QCameraReprocScaleParam()
   : mScaleEnabled(false),
     mIsUnderScaling(false),
-    mScaleDirection(0),
     mNeedScaleCnt(0),
     mSensorSizeTblCnt(0),
     mSensorSizeTbl(NULL),

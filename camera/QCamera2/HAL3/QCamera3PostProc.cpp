@@ -396,10 +396,6 @@ int32_t QCamera3PostProcessor::getFWKJpegEncodeConfig(
 
     LOGD("X");
     return NO_ERROR;
-
-on_error:
-    LOGD("X with error %d", ret);
-    return ret;
 }
 
 /*===========================================================================
@@ -2177,7 +2173,7 @@ int32_t getExifLatitude(rat_t *latitude, char *latRef, double value)
 {
     char str[30];
     snprintf(str, sizeof(str), "%f", value);
-    if(str != NULL) {
+    if(true) {
         parseGPSCoordinate(str, latitude);
 
         //set Latitude Ref
@@ -2212,7 +2208,7 @@ int32_t getExifLongitude(rat_t *longitude, char *lonRef, double value)
 {
     char str[30];
     snprintf(str, sizeof(str), "%f", value);
-    if(str != NULL) {
+    if(true) {
         parseGPSCoordinate(str, longitude);
 
         //set Longitude Ref
@@ -2247,7 +2243,7 @@ int32_t getExifAltitude(rat_t *altitude, char *altRef, double argValue)
 {
     char str[30];
     snprintf(str, sizeof(str), "%f", argValue);
-    if (str != NULL) {
+    if (true) {
         double value = atof(str);
         *altRef = 0;
         if(value < 0){
@@ -2280,7 +2276,7 @@ int32_t getExifGpsDateTimeStamp(char *gpsDateStamp, uint32_t bufLen,
 {
     char str[30];
     snprintf(str, sizeof(str), "%lld", (long long int)value);
-    if(str != NULL) {
+    if(true) {
         time_t unixTime = (time_t)atol(str);
         struct tm *UTCTimestamp = gmtime(&unixTime);
         if (UTCTimestamp != NULL && gpsDateStamp != NULL

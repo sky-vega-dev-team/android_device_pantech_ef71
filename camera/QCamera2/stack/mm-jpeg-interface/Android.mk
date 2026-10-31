@@ -6,13 +6,11 @@ include $(CLEAR_VARS)
 LOCAL_32_BIT_ONLY := $(BOARD_QTI_CAMERA_32BIT_ONLY)
 LOCAL_CFLAGS+= -D_ANDROID_ -DQCAMERA_REDEFINE_LOG
 
-LOCAL_CFLAGS += -Wall -Wextra -Wno-unused-parameter
+LOCAL_CFLAGS += -Wall -Wextra -Werror -Wno-unused-parameter
 # Pantech target flags and features, as the stock build added them
 include device/pantech/ef71/camera/pantech_flags.mk
 LOCAL_CFLAGS += $(EF71_PANTECH_FLAGS)
 LOCAL_CFLAGS += -include device/pantech/ef71/camera/ef71_camera_features.h
-# Stock 6.0 sources: keep their warnings as warnings
-LOCAL_CFLAGS += -Wno-error
 
 LOCAL_HEADER_LIBRARIES := generated_kernel_headers
 

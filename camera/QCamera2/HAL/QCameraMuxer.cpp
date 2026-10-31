@@ -128,7 +128,6 @@ QCameraMuxer::QCameraMuxer(uint32_t num_of_cameras)
       m_pPhyCamera(NULL),
       m_pLogicalCamera(NULL),
       m_pCallbacks(NULL),
-      m_bDualCameraEnabled(FALSE),
       m_bAuxCameraExposed(FALSE),
       m_nPhyCameras(num_of_cameras),
       m_nLogicalCameras(0),
@@ -2791,35 +2790,35 @@ int32_t QCameraMuxer::storeJpeg(cam_sync_type_t cam_type,
 
 // Muxer Ops
 camera_device_ops_t QCameraMuxer::mCameraMuxerOps = {
-    set_preview_window:         QCameraMuxer::set_preview_window,
-    set_callbacks:              QCameraMuxer::set_callBacks,
-    enable_msg_type:            QCameraMuxer::enable_msg_type,
-    disable_msg_type:           QCameraMuxer::disable_msg_type,
-    msg_type_enabled:           QCameraMuxer::msg_type_enabled,
+    .set_preview_window = QCameraMuxer::set_preview_window,
+    .set_callbacks = QCameraMuxer::set_callBacks,
+    .enable_msg_type = QCameraMuxer::enable_msg_type,
+    .disable_msg_type = QCameraMuxer::disable_msg_type,
+    .msg_type_enabled = QCameraMuxer::msg_type_enabled,
 
-    start_preview:              QCameraMuxer::start_preview,
-    stop_preview:               QCameraMuxer::stop_preview,
-    preview_enabled:            QCameraMuxer::preview_enabled,
-    store_meta_data_in_buffers: QCameraMuxer::store_meta_data_in_buffers,
+    .start_preview = QCameraMuxer::start_preview,
+    .stop_preview = QCameraMuxer::stop_preview,
+    .preview_enabled = QCameraMuxer::preview_enabled,
+    .store_meta_data_in_buffers = QCameraMuxer::store_meta_data_in_buffers,
 
-    start_recording:            QCameraMuxer::start_recording,
-    stop_recording:             QCameraMuxer::stop_recording,
-    recording_enabled:          QCameraMuxer::recording_enabled,
-    release_recording_frame:    QCameraMuxer::release_recording_frame,
+    .start_recording = QCameraMuxer::start_recording,
+    .stop_recording = QCameraMuxer::stop_recording,
+    .recording_enabled = QCameraMuxer::recording_enabled,
+    .release_recording_frame = QCameraMuxer::release_recording_frame,
 
-    auto_focus:                 QCameraMuxer::auto_focus,
-    cancel_auto_focus:          QCameraMuxer::cancel_auto_focus,
+    .auto_focus = QCameraMuxer::auto_focus,
+    .cancel_auto_focus = QCameraMuxer::cancel_auto_focus,
 
-    take_picture:               QCameraMuxer::take_picture,
-    cancel_picture:             QCameraMuxer::cancel_picture,
+    .take_picture = QCameraMuxer::take_picture,
+    .cancel_picture = QCameraMuxer::cancel_picture,
 
-    set_parameters:             QCameraMuxer::set_parameters,
-    get_parameters:             QCameraMuxer::get_parameters,
-    put_parameters:             QCameraMuxer::put_parameters,
-    send_command:               QCameraMuxer::send_command,
+    .set_parameters = QCameraMuxer::set_parameters,
+    .get_parameters = QCameraMuxer::get_parameters,
+    .put_parameters = QCameraMuxer::put_parameters,
+    .send_command = QCameraMuxer::send_command,
 
-    release:                    QCameraMuxer::release,
-    dump:                       QCameraMuxer::dump,
+    .release = QCameraMuxer::release,
+    .dump = QCameraMuxer::dump,
 };
 
 
