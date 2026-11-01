@@ -16,7 +16,9 @@ $(LOCAL_BUILT_MODULE): $(EF71_APNS_SRC) $(LOCAL_PATH)/Android.mk
 	@mkdir -p $(dir $@)
 	$(hide) sed -e '/carrier="KT IA" mcc="450" mnc="08"/s/ apn="[^"]*"/ apn="ims"/' \
 	    -e '/carrier="LG U+ IA" mcc="450" mnc="06"/s/ apn="[^"]*"/ apn="ims"/' \
+	    -e '/carrier="SKT IA" mcc="450" mnc="05"/s/ apn="[^"]*"/ apn="ims"/' \
 	    $< > $@.tmp
 	$(hide) grep -q 'carrier="KT IA" mcc="450" mnc="08" apn="ims"' $@.tmp
 	$(hide) grep -q 'carrier="LG U+ IA" mcc="450" mnc="06" apn="ims"' $@.tmp
+	$(hide) grep -q 'carrier="SKT IA" mcc="450" mnc="05" apn="ims"' $@.tmp
 	$(hide) mv $@.tmp $@

@@ -104,7 +104,7 @@ profiles=$(at_cmd 'AT+CGDCONT?' | grep '^+CGDCONT: ')
 
 # Attach profile for VoLTE carriers
 case "$carrier" in
-    kt|lgu)
+    kt|lgu|skt)
         if ! echo "$profiles" | grep -qi '^+CGDCONT: 1,"IPV4V6","ims",'; then
             if at_cmd 'AT+CGDCONT=1,"IPV4V6","ims"' | grep -q '^OK$'; then
                 log -t ef71-apn "set modem profile 1 to ims"

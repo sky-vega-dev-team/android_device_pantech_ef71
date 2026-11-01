@@ -437,6 +437,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/ef71_nocdma.xml:$(TARGET_COPY_OUT_VENDOR)/etc/ef71_nocdma.xml \
     $(LOCAL_PATH)/configs/modem/kt.cfg:$(TARGET_COPY_OUT_VENDOR)/etc/ef71_modem/kt.cfg \
     $(LOCAL_PATH)/configs/modem/lgu.cfg:$(TARGET_COPY_OUT_VENDOR)/etc/ef71_modem/lgu.cfg \
+    $(LOCAL_PATH)/configs/modem/skt.cfg:$(TARGET_COPY_OUT_VENDOR)/etc/ef71_modem/skt.cfg \
     $(LOCAL_PATH)/configs/privapp-permissions-qti.xml:system/etc/permissions/privapp-permissions-qti.xml
 
 # WiFi HAL
