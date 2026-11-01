@@ -150,10 +150,6 @@ PRODUCT_PACKAGES += \
     vendor.qti.hardware.camera.device@1.0 \
     vendor.qti.hardware.camera.device@1.0_vendor
 
-PRODUCT_PACKAGES += \
-    libshim_mutexdestroy \
-    libshim_pthreadts
-
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/camera/imx214_chromatix.xml:$(TARGET_COPY_OUT_VENDOR)/etc/camera/imx214_chromatix.xml \
     $(LOCAL_PATH)/configs/camera/pantech_camera_tp10.xml:$(TARGET_COPY_OUT_VENDOR)/etc/camera/pantech_camera_tp10.xml \

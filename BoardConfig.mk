@@ -233,11 +233,6 @@ BOARD_SEPOLICY_DIRS += \
     $(DEVICE_PATH)/sepolicy
 include device/qcom/sepolicy-legacy-um/sepolicy.mk
 
-# SHIMS
-TARGET_LD_SHIM_LIBS := \
-    /system/vendor/bin/mm-qcamera-daemon|libshim_pthreadts.so \
-    /system/vendor/bin/mm-qcamera-daemon|libshim_mutexdestroy.so
-
 # Time
 BOARD_USES_QC_TIME_SERVICES := true
 
