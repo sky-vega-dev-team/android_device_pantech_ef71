@@ -2585,10 +2585,14 @@
 
     <path name="voice-rec-dmic-ef">
         <path name="dmic-endfire" />
+        <ctl name="DEC6 Volume" value="96" />
+        <ctl name="DEC8 Volume" value="96" />
     </path>
 
     <path name="voice-rec-dmic-ef-fluence">
         <path name="dmic-endfire" />
+        <ctl name="DEC6 Volume" value="96" />
+        <ctl name="DEC8 Volume" value="96" />
     </path>
 
     <path name="speaker-dmic-broadside">
