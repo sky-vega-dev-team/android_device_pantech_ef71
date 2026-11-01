@@ -1,0 +1,2 @@
+# lowi-server reads the Wi-Fi properties
+get_prop(location, wifi_prop)

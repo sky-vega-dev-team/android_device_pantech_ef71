@@ -237,8 +237,6 @@ on boot
     write /proc/sys/net/netfilter/nf_conntrack_tcp_be_liberal 1
 
     # NFC local data and nfcee xml storage
-    mkdir /data/nfc 0770 nfc nfc
-    mkdir /data/nfc/param 0770 nfc nfc
     mkdir /data/vendor/nfc 0770 nfc nfc
     mkdir /data/vendor/nfc/param 0770 nfc nfc
     
@@ -327,9 +325,6 @@ on post-fs-data
     # Create directory for TZ Apps
     mkdir /data/misc/qsee 0770 system system
 
-    mkdir /data/media 0770 media_rw media_rw
-    chown media_rw media_rw /data/media
-
     # Create directory for tftp (already this line added before.)
     mkdir /data/vendor/tombstones 0771 system system
     mkdir /data/vendor/tombstones/rfs 0771 system system
@@ -345,13 +340,8 @@ on post-fs-data
     mkdir /data/vendor/wifi/hostapd/ctrl 0770 wifi wifi
     mkdir /data/vendor/wifi/wpa_supplicant 0770 wifi wifi
     mkdir /data/vendor/wifi/wigig_hostapd 0770 wifi wifi
-    mkdir /data/misc/wifi 0770 wifi wifi
-    mkdir /data/misc/wifi/sockets 0770 wifi wifi
-    mkdir /data/misc/wifi/wpa_supplicant 0770 wifi wifi
     mkdir /data/vendor/wifi/wpa 0770 wifi wifi
     mkdir /data/vendor/wifi/wpa/sockets 0770 wifi wifi
-    mkdir /data/misc/dhcp 0777 dhcp dhcp
-    chown dhcp dhcp /data/misc/dhcp
 
     # Create the directories used by WiGig Sensing
     mkdir /data/vendor/sensing 0770 system wifi
@@ -443,17 +433,8 @@ on post-fs-data
 
     mkdir /data/vendor/secure_element 0777 system system
 
-    # NFC local data and nfcee xml storage
-    mkdir /data/nfc 0770 nfc nfc
-    mkdir /data/nfc/param 0770 nfc nfc
-
     #Create IOP  deamon related dirs
     mkdir /data/vendor/iop 0700 root system
-
-    # Mark the copy complete flag to not completed
-    write /data/misc/radio/copy_complete 0
-    chown radio radio /data/misc/radio/copy_complete
-    chmod 0660 /data/misc/radio/copy_complete
 
     # Mark the copy complete flag to not completed
     write /data/vendor/radio/copy_complete 0
@@ -728,7 +709,7 @@ service vendor.dataqti /system/vendor/bin/qti
 service vendor.sensors /vendor/bin/sensors.qti
     class core
     user root
-    group root
+    group root system
 
 service qvop-daemon /vendor/bin/qvop-daemon
     class late_start
@@ -815,6 +796,7 @@ on property:drmdiag.load=0
 service qcom-sh /vendor/bin/init.qcom.sh
     class late_start
     user root
+    group root radio
     oneshot
 
 service sensor-sh /vendor/bin/init.qcom.sensors.sh
@@ -822,23 +804,11 @@ service sensor-sh /vendor/bin/init.qcom.sensors.sh
     user root
     oneshot
 
-service loggy /system/bin/sh  /vendor/etc/init/hw/loggy.sh
-    class main
-    user root
-    oneshot
-
-service qcom-post-boot /system/bin/sh /vendor/bin/init.qcom.post_boot.sh
+service qcom-post-boot /vendor/bin/init.qcom.post_boot.sh
     class late_start
     user root
     disabled
     oneshot
-
-service qti-testscripts /system/bin/sh /vendor/bin/init.qcom.testscripts.sh
-    class late_start
-    user root
-    disabled
-    oneshot
-    seclabel u:r:qti-testscripts:s0
 
 # Pantech only, 2012-04-02, ymlee_p11019, On Auto test mode, 5G DPD enabled, added "oneshot" ++++
 service ftm_ptt /system/bin/ftm_ptt -d
@@ -849,9 +819,6 @@ service ftm_ptt /system/bin/ftm_ptt -d
    oneshot
 
 on property:sys.boot_completed=1
-    start qcom-post-boot
-    start qti-testscripts
-    start config-zram
     start vendor.ef71-apn
 
 # LG U+ USIMs carry a CSIM app that never gets ready now that the carrier has no
@@ -1090,21 +1057,6 @@ service LKCore-rel /system/vendor/bin/LKCore
     disabled
     user system
     group system log oem_2901
-
-# Coresight early boot service
-service cs-early-boot /system/bin/sh /persist/coresight/qdss.agent.sh early-boot /system/etc/init.qcom.debug.sh
-    class core
-    user root
-    oneshot
-
-# Coresight post boot servive
-service cs-post-boot /system/bin/sh /persist/coresight/qdss.agent.sh
-    user root
-    disabled
-    oneshot
-
-on property:sys.boot_completed=1
-    start cs-post-boot
 
 on property:sys.dbg.coresight.enable=1
     write /persist/coresight/enable 1

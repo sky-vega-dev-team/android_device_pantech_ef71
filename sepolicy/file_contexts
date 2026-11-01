@@ -17,3 +17,10 @@
 # Modem APN profile provisioning
 /(vendor|system/vendor)/bin/init\.ef71\.apn\.sh                                         u:object_r:qti_init_shell_exec:s0
 /(vendor|system/vendor)/bin/ef71_modemcfg                                                u:object_r:ef71_modemcfg_exec:s0
+
+# The kernel has no schedtune, so /dev/stune is a plain directory that
+# libprocessgroup still writes to. Label it like a cgroup.
+/dev/stune(/.*)?                                                                        u:object_r:cgroup:s0
+
+# Widevine DRM HAL (1.1)
+/(vendor|system/vendor)/bin/hw/android\.hardware\.drm@1\.1-service\.widevine             u:object_r:hal_drm_widevine_exec:s0

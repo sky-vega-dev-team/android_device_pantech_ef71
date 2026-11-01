@@ -246,8 +246,7 @@ PRODUCT_PACKAGES += \
     init.ef71.apn.sh \
     ef71_apns-conf.xml \
     ef71_modemcfg \
-    init.qcom.early_boot.sh \
-    loggy.sh
+    init.qcom.early_boot.sh
 
 # IPA Manager
 PRODUCT_PACKAGES += \
