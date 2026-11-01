@@ -4,22 +4,12 @@ on enable-low-power
     # Enable power efficient workqueue
     write /sys/module/workqueue/parameters/power_efficient Y
 
-    # Set Memory parameters
-    write /proc/sys/vm/swappiness 100
-    swapon_all /vendor/etc/fstab.qcom
-
     # Set GPU idle freq & default gov
     write /sys/class/kgsl/kgsl-3d0/default_pwrlevel 4
     write /sys/class/kgsl/kgsl-3d0/devfreq/governor simple_ondemand
 
-    # Enable core control
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "interactive"
-    write /sys/devices/system/cpu/cpu0/core_ctl/min_cpus 2
-    write /sys/devices/system/cpu/cpu0/core_ctl/max_cpus 4
-    write /sys/devices/system/cpu/cpu0/core_ctl/busy_up_thres 75
-    write /sys/devices/system/cpu/cpu0/core_ctl/busy_down_thres 55
-    write /sys/devices/system/cpu/cpu0/core_ctl/offline_delay_ms 100
-    write /sys/devices/system/cpu/cpu0/core_ctl/is_big_cluster 1
+    # Enable core control (the cpu0 governor and core_ctl values come from
+    # init.qcom.post_boot.sh)
     write /sys/devices/system/cpu/cpu0/core_ctl/task_thres 20
 
     write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor "interactive"
@@ -35,8 +25,8 @@ on enable-low-power
     write /sys/module/cpu_boost/parameters/input_boost_freq "0:1209600 5:1094400"
     write /sys/module/cpu_boost/parameters/input_boost_ms 40
 
-    # The perf HAL refuses every perf lock until post boot is done. There is
-    # no init.qcom.post_boot.sh to set this, so set it once the above is in.
+    # The perf HAL refuses every perf lock until post boot is done.
+    # init.qcom.post_boot.sh sets this too; keep it here in case it fails.
     setprop vendor.post_boot.parsed 1
 
 
