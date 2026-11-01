@@ -35,6 +35,10 @@ on enable-low-power
     write /sys/module/cpu_boost/parameters/input_boost_freq "0:1209600 5:1094400"
     write /sys/module/cpu_boost/parameters/input_boost_ms 40
 
+    # The perf HAL refuses every perf lock until post boot is done. There is
+    # no init.qcom.post_boot.sh to set this, so set it once the above is in.
+    setprop vendor.post_boot.parsed 1
+
 
 on charger
     # Offline all cores other than CPU0
