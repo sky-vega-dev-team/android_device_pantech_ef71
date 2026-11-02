@@ -1,0 +1,8 @@
+# The camera sockets are in /data/vendor/camera (vendor_camera_data_file,
+# see sepolicy-legacy-um). The gyro module also looks up sensorservice.
+allow mm-qcamerad sensorservice_service:service_manager find;
+binder_call(mm-qcamerad, servicemanager)
+allow mm-qcamerad system_server:unix_stream_socket { read write };
+
+# Debug dumps would go to /data/misc/camera; the daemon only probes it
+dontaudit mm-qcamerad camera_data_file:dir search;
