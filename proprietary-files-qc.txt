@@ -751,7 +751,6 @@ vendor/lib64/vendor.qti.imsrtpservice@2.1.so
 vendor/bin/ssr_diag
 
 # Thermal - from TA-1024
-vendor/bin/thermal-engine
 -vendor/lib/libthermalclient.so
 -vendor/lib64/libthermalclient.so
 
