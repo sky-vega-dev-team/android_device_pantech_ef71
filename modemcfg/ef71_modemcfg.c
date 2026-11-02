@@ -39,11 +39,22 @@
 #define DIAG_IOCTL_SWITCH_LOGGING 7
 #define DIAG_CON_APSS 0x1
 #define DIAG_CON_MPSS 0x2
+#define DIAG_MSM_MASK (1 << 0)  /* device_mask: the local (MSM) processor */
 
+/*
+ * The msm-4.19 layout. msm-4.19 copies all of it and rejects a request
+ * without a device_mask; msm-3.18 only reads the first three fields.
+ */
 struct diag_logging_mode_param_t {
     uint32_t req_mode;
     uint32_t peripheral_mask;
+    uint32_t pd_mask;
     uint8_t mode_param;
+    uint8_t diag_id;
+    uint8_t pd_val;
+    uint8_t reserved;
+    int peripheral;
+    int device_mask;
 } __attribute__((packed));
 
 /* EFS2 over DIAG subsystem dispatch */
@@ -94,6 +105,7 @@ static int diag_open(void)
         .req_mode = MEMORY_DEVICE_MODE,
         .peripheral_mask = DIAG_CON_APSS | DIAG_CON_MPSS,
         .mode_param = 0,
+        .device_mask = DIAG_MSM_MASK,
     };
     struct sigaction sa;
 
