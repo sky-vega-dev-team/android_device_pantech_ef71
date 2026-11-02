@@ -38,7 +38,7 @@ TARGET_NO_BOOTLOADER := true
 BOARD_KERNEL_BASE := 0x80000000
 BOARD_KERNEL_CMDLINE := androidboot.hardware=qcom msm_rtb.filter=0x237 ehci-hcd.park=3 lpm_levels.sleep_disabled=1 androidboot.bootdevice=7824900.sdhci loop.max_part=7
 BOARD_KERNEL_CMDLINE += androidboot.boot_devices=soc/7824900.sdhci
-BOARD_KERNEL_CMDLINE += androidboot.usbconfigfs=true androidboot.usbcontroller=msm_hsusb androidboot.init_fatal_reboot_target=recovery printk.devkmsg=on
+BOARD_KERNEL_CMDLINE += androidboot.usbconfigfs=true androidboot.usbcontroller=msm_hsusb androidboot.init_fatal_reboot_target=bootloader printk.devkmsg=on
 BOARD_KERNEL_CMDLINE += console=ttyMSM0,115200,n8 androidboot.console=ttyMSM0 earlycon=msm_hsl_uart,0x78b0000
 # msm-4.19 bring-up
 BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
