@@ -45,18 +45,17 @@ on property:ro.bootmode=charger && property:init.svc.vendor.qcom-post-boot=stopp
 on property:hw.fm.init=*
     write /sys/module/radio_iris_transport/parameters/fmsmd_set ${hw.fm.init}
 
-# RIL
+# RIL. Single SIM: a second RIL grabs IQcRilAudio/slot1 and reports the
+# wrong voice session, which leaves VoLTE calls silent; init.class_main.sh
+# only starts vendor.qcrild2 for multi-SIM configurations.
 on boot
     enable vendor.qcrild
-    enable vendor.qcrild2
 
 on property:vendor.subsys_state_notifier.modem.state=OFFLINE
     stop vendor.qcrild
-    stop vendor.qcrild2
 
 on property:vendor.subsys_state_notifier.modem.state=ONLINE
     start vendor.qcrild
-    start vendor.qcrild2
 
 # SDHCI
 on early-fs
