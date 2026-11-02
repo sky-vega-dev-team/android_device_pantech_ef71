@@ -137,6 +137,7 @@ DEVICE_MANIFEST_FILE := \
     $(DEVICE_PATH)/configs/manifest/cryptfshw.xml \
     $(DEVICE_PATH)/configs/manifest/gatekeeper.xml \
     $(DEVICE_PATH)/configs/manifest/keymaster.xml \
+    $(DEVICE_PATH)/configs/manifest/nfc.xml \
     $(DEVICE_PATH)/configs/manifest/radio.xml
 DEVICE_MATRIX_FILE := $(DEVICE_PATH)/compatibility_matrix.xml
 

@@ -302,6 +302,9 @@ firmware_directories /vendor/firmware_mnt/image/
 # Add device block for FRP
 /dev/block/platform/soc/7824900.sdhci/by-name/config    0600   system     system
 
+# NFC (PN548 on qcom,nq-nci)
+/dev/nq-nci                                             0660   nfc        nfc
+
 # Kmsg device
 /dev/kmsg                                               0620   root       system
 
