@@ -8,6 +8,17 @@ LOCAL_CFLAGS+= -D_ANDROID_ -DQCAMERA_REDEFINE_LOG -DCONFIG_MACH_MSM8937_EF71S
 
 LOCAL_CFLAGS += -Wall -Wextra -Wno-unused-parameter
 
+ifneq ($(TARGET_KERNEL_VERSION),$(filter $(TARGET_KERNEL_VERSION),3.18 4.4 4.9))
+  ifneq ($(LIBION_HEADER_PATH_WRAPPER), )
+    include $(LIBION_HEADER_PATH_WRAPPER)
+    LOCAL_C_INCLUDES += $(LIBION_HEADER_PATHS)
+  else
+    LOCAL_C_INCLUDES += \
+            $(TOP)/system/core/libion/include \
+            $(TOP)/system/core/libion/kernel-headers
+  endif
+endif
+
 LOCAL_HEADER_LIBRARIES := generated_kernel_headers
 
 IMGLIB_HEADER_PATH := $(TARGET_OUT_INTERMEDIATES)/include/mm-camera/imglib
@@ -28,6 +39,9 @@ LOCAL_SRC_FILES := \
 
 LOCAL_MODULE           := libmmlib2d_interface
 LOCAL_SHARED_LIBRARIES := libdl libcutils liblog
+ifneq ($(TARGET_KERNEL_VERSION),$(filter $(TARGET_KERNEL_VERSION),3.18 4.4 4.9))
+LOCAL_SHARED_LIBRARIES += libion
+endif
 LOCAL_MODULE_TAGS := optional
 LOCAL_VENDOR_MODULE := true
 

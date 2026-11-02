@@ -134,8 +134,19 @@ EF71_PRODUCT_PACKAGES += \
     android.frameworks.sensorservice@1.0.vendor \
     android.hardware.camera.provider@2.4-impl \
     android.hardware.camera.provider@2.4-service \
+    camera.msm8937 \
+    libmmcamera_interface \
+    libmmjpeg_interface \
+    libqomx_core \
     vendor.qti.hardware.camera.device@1.0.vendor \
     libstdc++.vendor
+
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/camera/imx214_chromatix.xml:$(TARGET_COPY_OUT_VENDOR)/etc/camera/imx214_chromatix.xml \
+    $(LOCAL_PATH)/configs/camera/pantech_camera_tp10.xml:$(TARGET_COPY_OUT_VENDOR)/etc/camera/pantech_camera_tp10.xml \
+    $(LOCAL_PATH)/configs/camera/pantech_camera_tp20.xml:$(TARGET_COPY_OUT_VENDOR)/etc/camera/pantech_camera_tp20.xml \
+    $(LOCAL_PATH)/configs/camera/pantech_camera_ws10.xml:$(TARGET_COPY_OUT_VENDOR)/etc/camera/pantech_camera_ws10.xml \
+    $(LOCAL_PATH)/configs/camera/s5k5e2_chromatix.xml:$(TARGET_COPY_OUT_VENDOR)/etc/camera/s5k5e2_chromatix.xml
 
 # Configstore (msm-4.19)
 EF71_PRODUCT_PACKAGES += \

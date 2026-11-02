@@ -28,6 +28,8 @@ TARGET_BOARD_PLATFORM_GPU := qcom-adreno505
 
 # Build
 BUILD_BROKEN_DUP_RULES := true
+# The stock mm-camera sources and the camera HAL still export headers this way
+BUILD_BROKEN_USES_BUILD_COPY_HEADERS := true
 BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
 
 # Bootloader

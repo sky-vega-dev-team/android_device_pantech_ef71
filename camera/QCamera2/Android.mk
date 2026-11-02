@@ -25,7 +25,14 @@ LOCAL_SRC_FILES += \
         HAL3/QCamera3CropRegionMapper.cpp \
         HAL3/QCamera3StreamMem.cpp
 
+LOCAL_CFLAGS := -Wall -Wextra -Werror -Wno-unused-parameter -Wno-unused-variable -Wno-implicit-fallthrough
+
 #HAL 1.0 source
+
+ifeq ($(TARGET_SUPPORT_HAL1),false)
+LOCAL_CFLAGS += -DQCAMERA_HAL3_SUPPORT
+else
+LOCAL_CFLAGS += -DQCAMERA_HAL1_SUPPORT
 LOCAL_SRC_FILES += \
         HAL/QCamera2HWI.cpp \
         HAL/QCameraMuxer.cpp \
@@ -38,8 +45,12 @@ LOCAL_SRC_FILES += \
         HAL/QCameraParameters.cpp \
         HAL/QCameraParametersIntf.cpp \
         HAL/QCameraThermalAdapter.cpp
+endif
 
-LOCAL_CFLAGS := -Wall -Wextra -Werror -Wno-unused-parameter -Wno-unused-variable -Wno-implicit-fallthrough
+# The LOG macros split the statement expressions (clang 12, as in land)
+ifeq (1,$(filter 1,$(shell echo "$$(( $(PLATFORM_SDK_VERSION) >= 31 ))" )))
+LOCAL_CFLAGS += -Wno-compound-token-split-by-macro
+endif
 
 # System header file path prefix
 LOCAL_CFLAGS += -DSYSTEM_HEADER_PREFIX=sys
@@ -62,9 +73,13 @@ ifeq ($(TARGET_USES_MEDIA_EXTENSIONS), true)
 LOCAL_CFLAGS += -DUSE_MEDIA_EXTENSIONS
 endif
 
-# ef71: the HAL runs inside cameraserver (no treble), where the display
-# service HIDL library is not available, so take vsync from libgui instead
-USE_DISPLAY_SERVICE := false
+# The HAL runs in the vendor camera provider: take vsync from the display
+# service HIDL instead of libgui (VNDK-private). QCameraDisplay comes from
+# land-camera (CAF LA.UM.7), which has that path.
+USE_DISPLAY_SERVICE := true
+LOCAL_CFLAGS += -DUSE_DISPLAY_SERVICE
+
+#LOCAL_CFLAGS += -std=c++11 -std=gnu++0x
 
 #HAL 1.0 Flags
 LOCAL_CFLAGS += -DDEFAULT_DENOISE_MODE_ON -DHAL3 -DQCAMERA_REDEFINE_LOG
@@ -83,6 +98,17 @@ LOCAL_C_INCLUDES := \
         system/core/include/cutils \
         system/core/include/system \
         system/media/camera/include/system
+
+ifneq ($(TARGET_KERNEL_VERSION),$(filter $(TARGET_KERNEL_VERSION),3.18 4.4 4.9))
+  ifneq ($(LIBION_HEADER_PATH_WRAPPER), )
+    include $(LIBION_HEADER_PATH_WRAPPER)
+    LOCAL_C_INCLUDES += $(LIBION_HEADER_PATHS)
+  else
+    LOCAL_C_INCLUDES += \
+            system/core/libion/kernel-headers \
+            system/core/libion/include
+  endif
+endif
 
 #HAL 1.0 Include paths
 LOCAL_C_INCLUDES += \
@@ -111,6 +137,9 @@ LOCAL_C_INCLUDES += \
 LOCAL_SHARED_LIBRARIES := liblog libhardware libutils libcutils libdl libsync
 LOCAL_SHARED_LIBRARIES += libmmcamera_interface libmmjpeg_interface libui libcamera_metadata
 LOCAL_SHARED_LIBRARIES += libqdMetaData libqservice libbinder
+ifneq ($(TARGET_KERNEL_VERSION),$(filter $(TARGET_KERNEL_VERSION),3.18 4.4 4.9))
+LOCAL_SHARED_LIBRARIES += libion
+endif
 ifeq ($(USE_DISPLAY_SERVICE),true)
 LOCAL_SHARED_LIBRARIES += android.frameworks.displayservice@1.0 libhidlbase libhidltransport
 else

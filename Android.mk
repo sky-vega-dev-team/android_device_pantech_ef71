@@ -8,8 +8,7 @@ LOCAL_PATH := $(call my-dir)
 
 ifeq ($(TARGET_DEVICE),ef71)
 
-# The Pantech camera HAL (camera/) waits for the camera kernel port
-include $(filter-out $(LOCAL_PATH)/camera/Android.mk,$(call all-makefiles-under,$(LOCAL_PATH)))
+include $(call all-makefiles-under,$(LOCAL_PATH))
 
 include $(CLEAR_VARS)
 
