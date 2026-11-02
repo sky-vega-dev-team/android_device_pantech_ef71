@@ -1,0 +1,2 @@
+# The Wi-Fi HAL tunes the TCP window for WLAN
+allow hal_wifi_default proc_net:file w_file_perms;

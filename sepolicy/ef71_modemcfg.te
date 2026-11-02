@@ -11,3 +11,6 @@ allow ef71_modemcfg qti_init_shell:fifo_file w_file_perms;
 # Backup of the EFS files it replaces
 allow ef71_modemcfg vendor_radio_data_file:dir rw_dir_perms;
 allow ef71_modemcfg vendor_radio_data_file:file create_file_perms;
+
+# init.ef71.apn.sh reads ef71_modemcfg's output through a pipe
+allow ef71_modemcfg qti_init_shell:fifo_file { getattr write };

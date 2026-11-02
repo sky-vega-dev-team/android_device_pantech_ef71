@@ -5,3 +5,6 @@ allow vendor_init {
   fpc_data_file
   system_data_file
 }:dir { create search getattr open read setattr ioctl write add_name remove_name rmdir relabelfrom };
+
+# init.target.rc creates dirs under /persist/data (a link once relabeled)
+allow vendor_init persist_drm_file:lnk_file read;

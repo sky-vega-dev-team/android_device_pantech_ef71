@@ -24,3 +24,6 @@
 
 # Widevine DRM HAL (1.1)
 /(vendor|system/vendor)/bin/hw/android\.hardware\.drm@1\.1-service\.widevine             u:object_r:hal_drm_widevine_exec:s0
+
+# NFC (NXP PN548); /dev/nq-nci is only a link to it
+/dev/pn548                                                                              u:object_r:nfc_device:s0
