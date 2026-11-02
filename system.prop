@@ -93,3 +93,5 @@ ro.device.gpu=Adreno 505
 ro.device.rear_cam=13MP
 ro.device.front_cam=5MP
 ro.device.screen_res=1080 x 1920
+
+persist.sys.usb.config=adb
