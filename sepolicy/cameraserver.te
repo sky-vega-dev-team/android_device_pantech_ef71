@@ -1,8 +1,0 @@
-# The camera HAL runs in cameraserver here and talks to mm-qcamera-daemon
-# over its sockets in /data/vendor/camera
-allow cameraserver vendor_camera_data_file:dir search;
-allow cameraserver vendor_camera_data_file:sock_file write;
-allow cameraserver mm-qcamerad:unix_dgram_socket sendto;
-
-# The camera HAL takes perf locks
-hal_client_domain(cameraserver, hal_perf)

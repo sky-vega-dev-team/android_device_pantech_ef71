@@ -1,4 +1,4 @@
-/* Copyright (c) 2012-2015, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2012-2015, 2021 The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -54,6 +54,7 @@
 #define STR_MTP         "MTP"
 #define STR_APQ         "apq"
 #define STR_SDC         "sdc"  // alternative string for APQ targets
+#define STR_QCS         "qcs"  // string for Gen9 APQ targets
 #define STR_MSM         "msm"
 #define STR_SDM         "sdm"  // alternative string for MSM targets
 #define STR_APQ_NO_WGR  "baseband_apq_nowgr"
@@ -67,21 +68,26 @@ static unsigned int gTarget = (unsigned int)-1;
 
 static int read_a_line(const char * file_path, char * line, int line_size)
 {
-    FILE *fp;
+    FILE *fp = NULL;
     int result = 0;
 
     * line = '\0';
     fp = fopen(file_path, "r" );
     if( fp == NULL ) {
-        LOC_LOGE("open failed: %s: %s\n", file_path, strerror(errno));
+        LOC_LOGe("open failed: %s: %s\n", file_path, strerror(errno));
         result = -1;
     } else {
         int len;
         fgets(line, line_size, fp);
         len = strlen(line);
+        while ('\n' == line[len-1]) {
+            // If there is a new line at end of string, replace it with NULL
+            line[len-1] = '\0';
+            len--;
+        }
         len = len < line_size - 1? len : line_size - 1;
         line[len] = '\0';
-        LOC_LOGD("cat %s: %s", file_path, line);
+        LOC_LOGe("cat %s: %s", file_path, line);
         fclose(fp);
     }
     return result;
@@ -93,11 +99,10 @@ void loc_get_target_baseband(char *baseband, int array_length)
 {
     if(baseband && (array_length >= PROPERTY_VALUE_MAX)) {
         property_get("ro.baseband", baseband, "");
-        LOC_LOGD("%s:%d]: Baseband: %s\n", __func__, __LINE__, baseband);
+        LOC_LOGd("Baseband: %s\n", baseband);
     }
     else {
-        LOC_LOGE("%s:%d]: NULL parameter or array length less than PROPERTY_VALUE_MAX\n",
-                 __func__, __LINE__);
+        LOC_LOGe("NULL parameter or array length less than PROPERTY_VALUE_MAX\n");
     }
 }
 
@@ -107,11 +112,10 @@ void loc_get_platform_name(char *platform_name, int array_length)
 {
     if(platform_name && (array_length >= PROPERTY_VALUE_MAX)) {
         property_get("ro.board.platform", platform_name, "");
-        LOC_LOGD("%s:%d]: Target name: %s\n", __func__, __LINE__, platform_name);
+        LOC_LOGd("Target name: %s\n", platform_name);
     }
     else {
-        LOC_LOGE("%s:%d]: Null parameter or array length less than PROPERTY_VALUE_MAX\n",
-                 __func__, __LINE__);
+        LOC_LOGe("Null parameter or array length less than PROPERTY_VALUE_MAX\n");
     }
 }
 
@@ -121,11 +125,49 @@ void loc_get_auto_platform_name(char *platform_name, int array_length)
 {
     if(platform_name && (array_length >= PROPERTY_VALUE_MAX)) {
         property_get("ro.hardware.type", platform_name, "");
-        LOC_LOGD("%s:%d]: Autoplatform name: %s\n", __func__, __LINE__, platform_name);
+        LOC_LOGd("Autoplatform name: %s\n", platform_name);
     }
     else {
-        LOC_LOGE("%s:%d]: Null parameter or array length less than PROPERTY_VALUE_MAX\n",
-                 __func__, __LINE__);
+        LOC_LOGe("Null parameter or array length less than PROPERTY_VALUE_MAX\n");
+    }
+}
+
+/*Reads the property ro.config.low_ram to identify if this is a low ram target
+  Returns:
+  0 if not a low ram target
+  1 if this is a low ram target
+*/
+int loc_identify_low_ram_target()
+{
+    int ret = 0;
+    char low_ram_target[PROPERTY_VALUE_MAX] = {};
+    property_get("ro.config.low_ram", low_ram_target, "");
+    LOC_LOGd("low ram target: %s\n", low_ram_target);
+    return !(strncmp(low_ram_target, "true", PROPERTY_VALUE_MAX));
+}
+
+/*The character array passed to this function should have length
+  of atleast PROPERTY_VALUE_MAX*/
+/* Reads the soc_id node and return the soc_id value */
+void loc_get_device_soc_id(char *soc_id_value, int array_length)
+{
+    static const char soc_id[]     = "/sys/devices/soc0/soc_id";
+    static const char soc_id_dep[] = "/sys/devices/system/soc/soc0/id";
+    int return_val = 0;
+
+    if (soc_id_value && (array_length >= PROPERTY_VALUE_MAX)) {
+        if (!access(soc_id, F_OK)) {
+            return_val = read_a_line(soc_id, soc_id_value, array_length);
+        } else {
+            return_val = read_a_line(soc_id_dep, soc_id_value, array_length);
+        }
+        if (0 == return_val) {
+            LOC_LOGd("SOC Id value: %s\n", soc_id_value);
+        } else {
+            LOC_LOGe("Unable to read the soc_id value\n");
+        }
+    } else {
+        LOC_LOGe("Null parameter or array length less than PROPERTY_VALUE_MAX\n");
     }
 }
 
@@ -135,10 +177,8 @@ unsigned int loc_get_target(void)
         return gTarget;
 
     static const char hw_platform[]      = "/sys/devices/soc0/hw_platform";
-    static const char id[]               = "/sys/devices/soc0/soc_id";
     static const char hw_platform_dep[]  =
         "/sys/devices/system/soc/soc0/hw_platform";
-    static const char id_dep[]           = "/sys/devices/system/soc/soc0/id";
     static const char mdm[]              = "/target"; // mdm target we are using
 
     char rd_hw_platform[LINE_LEN];
@@ -154,11 +194,8 @@ unsigned int loc_get_target(void)
     } else {
         read_a_line(hw_platform_dep, rd_hw_platform, LINE_LEN);
     }
-    if (!access(id, F_OK)) {
-        read_a_line(id, rd_id, LINE_LEN);
-    } else {
-        read_a_line(id_dep, rd_id, LINE_LEN);
-    }
+    // Get the soc-id for this device.
+    loc_get_device_soc_id(rd_id, sizeof(rd_id));
 
     /*check automotive platform*/
     loc_get_auto_platform_name(rd_auto_platform, sizeof(rd_auto_platform));
@@ -175,7 +212,8 @@ unsigned int loc_get_target(void)
     }
 
     if( !memcmp(baseband, STR_APQ, LENGTH(STR_APQ)) ||
-        !memcmp(baseband, STR_SDC, LENGTH(STR_SDC)) ) {
+        !memcmp(baseband, STR_SDC, LENGTH(STR_SDC)) ||
+        !memcmp(baseband, STR_QCS, LENGTH(STR_QCS)) ) {
 
         if( !memcmp(rd_id, MPQ8064_ID_1, LENGTH(MPQ8064_ID_1))
             && IS_STR_END(rd_id[LENGTH(MPQ8064_ID_1)]) )

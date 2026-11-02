@@ -1,2 +1,0 @@
-# time_daemon drops from root to system
-allow time_daemon self:capability { setuid setgid };

@@ -1,0 +1,26 @@
+cc_defaults {
+    name: "charger_led_defaults",
+    cflags: [
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Wunused",
+    ],
+    shared_libs: ["libcutils"],
+    srcs: ["main.c"],
+}
+
+cc_binary {
+    name: "charger_led",
+    defaults: ["charger_led_defaults"],
+    vendor: true,
+    init_rc: ["charger_led.rc"],
+}
+
+cc_binary {
+    name: "charger_led_recovery",
+    stem: "charger_led",
+    defaults: ["charger_led_defaults"],
+    recovery: true,
+    init_rc: ["charger_led.recovery.rc"],
+}

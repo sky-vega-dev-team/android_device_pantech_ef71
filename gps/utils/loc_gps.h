@@ -1,4 +1,7 @@
 /*
+ * Copyright (c) 2021, The Linux Foundation. All rights reserved.
+ * Not a Contribution
+ *
  * Copyright (C) 2010 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -99,7 +102,22 @@ typedef uint16_t LocGpsLocationFlags;
 /** LocGpsLocation has valid accuracy. */
 #define LOC_GPS_LOCATION_HAS_ACCURACY   0x0010
 /** LocGpsLocation has valid vertical uncertainity */
-#define LOC_GPS_LOCATION_HAS_VERT_UNCERTAINITY   0x0040
+#define LOC_GPS_LOCATION_HAS_VERT_UNCERTAINITY   0x0020
+/** LocGpsLocation has valid speed accuracy */
+#define LOC_GPS_LOCATION_HAS_SPEED_ACCURACY   0x0040
+/** LocGpsLocation has valid bearing accuracy */
+#define LOC_GPS_LOCATION_HAS_BEARING_ACCURACY 0x0080
+/** LocGpsLocation has valid spoof mask */
+#define LOC_GPS_LOCATION_HAS_SPOOF_MASK   0x0100
+/** Location has valid source information. */
+#define LOC_GPS_LOCATION_HAS_SOURCE_INFO   0x0200
+
+/** Spoof mask in LocGpsLocation */
+typedef uint32_t LocGpsSpoofMask;
+#define LOC_GPS_LOCATION_NONE_SPOOFED            0x0000
+#define LOC_GPS_LOCATION_POSITION_SPOOFED        0x0001
+#define LOC_GPS_LOCATION_TIME_SPOOFED            0x0002
+#define LOC_GPS_LOCATION_NAVIGATION_DATA_SPOOFED 0x0004
 
 /** Flags for the loc_gps_set_capabilities callback. */
 
@@ -142,13 +160,24 @@ typedef uint16_t LocGpsAidingData;
 #define LOC_GPS_DELETE_SVSTEER          0x0100
 #define LOC_GPS_DELETE_SADATA           0x0200
 #define LOC_GPS_DELETE_RTI              0x0400
+#define LOC_GPS_DELETE_MB_DATA          0x0800
 #define LOC_GPS_DELETE_CELLDB_INFO      0x8000
 #define LOC_GPS_DELETE_ALL              0xFFFF
 
 /** AGPS type */
 typedef uint16_t LocAGpsType;
+#define LOC_AGPS_TYPE_ANY           0
 #define LOC_AGPS_TYPE_SUPL          1
 #define LOC_AGPS_TYPE_C2K           2
+#define LOC_AGPS_TYPE_WWAN_ANY      3
+#define LOC_AGPS_TYPE_WIFI          4
+#define LOC_AGPS_TYPE_SUPL_ES       5
+
+typedef uint16_t LocSubId;
+#define LOC_DEFAULT_SUB    0
+#define LOC_PRIMARY_SUB    1
+#define LOC_SECONDARY_SUB  2
+#define LOC_TERTIARY_SUB   3
 
 typedef uint16_t LocAGpsSetIDType;
 #define LOC_AGPS_SETID_TYPE_NONE    0
@@ -157,9 +186,9 @@ typedef uint16_t LocAGpsSetIDType;
 
 typedef uint16_t LocApnIpType;
 #define LOC_APN_IP_INVALID          0
-#define LOC_APN_IP_IPV4             1
-#define LOC_APN_IP_IPV6             2
-#define LOC_APN_IP_IPV4V6           3
+#define LOC_APN_IP_IPV4             4
+#define LOC_APN_IP_IPV6             6
+#define LOC_APN_IP_IPV4V6           10
 
 /**
  * String length constants
@@ -530,9 +559,11 @@ typedef uint8_t                         LocGnssConstellationType;
 /** Represents a location. */
 typedef struct {
     /** set to sizeof(LocGpsLocation) */
-    size_t          size;
+    uint32_t        size;
     /** Contains LocGpsLocationFlags bits. */
     uint16_t        flags;
+    /** The spoof mask */
+    LocGpsSpoofMask spoof_mask;
     /** Represents latitude in degrees. */
     double          latitude;
     /** Represents longitude in degrees. */
@@ -550,7 +581,11 @@ typedef struct {
     /** Represents the expected vertical uncertainity in meters*/
     float           vertUncertainity;
     /** Timestamp for the location fix. */
-    LocGpsUtcTime      timestamp;
+    LocGpsUtcTime   timestamp;
+    /** Elapsed RealTime in nanosends */
+    uint64_t        elapsedRealTime;
+    /** Elapsed Real Time Uncertainty in nanosends */
+    uint64_t        elapsedRealTimeUnc;
 } LocGpsLocation;
 
 /** Represents the status. */

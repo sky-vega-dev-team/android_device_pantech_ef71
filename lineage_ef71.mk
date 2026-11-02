@@ -18,12 +18,13 @@
 # Inherit from those products. Most specific first.
 $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/product_launched_with_n_mr1.mk)
 
 # Inherit some common Lineage stuff
 $(call inherit-product, vendor/lineage/config/common_full_phone.mk)
 
 # Inherit from ef71 device
-$(call inherit-product, $(LOCAL_PATH)/device.mk)
+$(call inherit-product, device/pantech/ef71/device.mk)
 
 PRODUCT_BRAND := SKY
 PRODUCT_DEVICE := ef71
@@ -32,5 +33,7 @@ PRODUCT_MODEL := IM-100
 PRODUCT_MANUFACTURER := Pantech
 
 PRODUCT_GMS_CLIENTID_BASE := android-pantech
+BOARD_VENDOR := Pantech
+TARGET_VENDOR := Pantech
 
 TARGET_VENDOR_PRODUCT_NAME := ef71

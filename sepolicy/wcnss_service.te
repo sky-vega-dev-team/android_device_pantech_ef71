@@ -1,4 +1,0 @@
-# wcnss_service sets vendor.wlan.driver.config. It also tries the serial
-# number, which only some domains may read; it works without it.
-set_prop(wcnss_service, vendor_default_prop)
-dontaudit wcnss_service serialno_prop:file r_file_perms;

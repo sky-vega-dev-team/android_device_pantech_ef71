@@ -1,2 +1,0 @@
-# installd asks every mount for its quota, including the DSP image
-dontaudit installd adsprpcd_file:filesystem quotaget;

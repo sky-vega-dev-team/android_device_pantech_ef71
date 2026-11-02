@@ -1,5 +1,0 @@
-# The boot animation probes the GPU node; it does not need it
-dontaudit bootanim sysfs_kgsl:dir search;
-
-# Apps' GPU drivers probe the same node
-dontaudit appdomain sysfs_kgsl:dir search;
