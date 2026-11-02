@@ -468,12 +468,17 @@ on post-fs-data
 
     # Sensors
     # Setup sensors-related directories and permissions
-    mkdir /persist/sensors 0775
-    chown root system /persist/sensors
+    # sensors.qti runs as system (like other MSM8937 trees), so the registry
+    # it keeps here has to belong to system
+    mkdir /persist/sensors 0775 system system
+    chown system system /persist/sensors
+    mkdir /persist/sensors/registry 0700 system system
+    mkdir /persist/sensors/registry/registry 0700 system system
+    chown system system /persist/sensors/registry/registry/sensors_registry
     write /persist/sensors/sensors_settings 1
-    chown root system /persist/sensors/sensors_settings
+    chown system system /persist/sensors/sensors_settings
     chmod 664 /persist/sensors/sensors_settings
-    chown root system /persist/sensors/sns.reg
+    chown system system /persist/sensors/sns.reg
     chmod 664 /persist/sensors/sns.reg
 
     mkdir /data/misc/sensors
@@ -708,8 +713,11 @@ service vendor.dataqti /system/vendor/bin/qti
 
 service vendor.sensors /vendor/bin/sensors.qti
     class core
-    user root
-    group root system
+    user system
+    group system
+    # Grants the ability for this daemon to bind IPC router ports so it can
+    # register QMI services
+    capabilities NET_BIND_SERVICE
 
 service qvop-daemon /vendor/bin/qvop-daemon
     class late_start
@@ -799,14 +807,10 @@ service qcom-sh /vendor/bin/init.qcom.sh
     group root radio
     oneshot
 
-service sensor-sh /vendor/bin/init.qcom.sensors.sh
-    class core
-    user root
-    oneshot
-
 service qcom-post-boot /vendor/bin/init.qcom.post_boot.sh
     class late_start
     user root
+    group root system
     disabled
     oneshot
 

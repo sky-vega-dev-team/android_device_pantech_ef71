@@ -242,7 +242,6 @@ PRODUCT_PACKAGES += \
     init.target.rc \
     ueventd.qcom.rc \
     init.qcom.usb.sh \
-    init.qcom.sensors.sh \
     init.ef71.apn.sh \
     ef71_apns-conf.xml \
     ef71_modemcfg \
