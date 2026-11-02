@@ -184,6 +184,10 @@ TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/rootdir/etc/fstab.qcom
 # RIL
 ENABLE_VENDOR_RIL_SERVICE := true
 
+# Shims (the vendor tree lives in /system/vendor)
+TARGET_LD_SHIM_LIBS := \
+    /system/vendor/bin/hw/qcrild|libshim_qcrild.so
+
 # Security patch level
 VENDOR_SECURITY_PATCH := 2019-05-01
 

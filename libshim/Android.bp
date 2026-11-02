@@ -79,3 +79,13 @@ cc_library_shared {
         "ims/libgui.cpp"
     ],
 }
+
+// qcrild: IPv6 DNS servers for IPv6 PDNs
+cc_library_shared {
+    name: "libshim_qcrild",
+    vendor: true,
+    compile_multilib: "64",
+    srcs: ["qcrild_dns.c"],
+    shared_libs: ["libdl", "liblog"],
+    cflags: ["-Wall", "-Werror"],
+}
