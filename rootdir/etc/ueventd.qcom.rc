@@ -49,6 +49,8 @@ firmware_directories /vendor/firmware_mnt/image/
 /dev/smd5                 0660   system     system
 /dev/smd6                 0660   system     system
 /dev/smd7                 0660   bluetooth  bluetooth
+# AT port for init.ef71.apn.sh
+/dev/smd8                 0660   radio      radio
 /dev/ccid_bridge          0660   system     system
 /dev/ipa                  0660   radio      radio
 /dev/wwan_ioctl           0660   radio      radio

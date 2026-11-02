@@ -18,7 +18,10 @@
 # Vendor domain: only use the vendor toolbox
 export PATH=/vendor/bin
 
-DEV=/dev/smd11
+# AT port: msm-4.19 only opens the SMD channels the modem allocated, and this
+# modem leaves DATA11 (smd11, the msm-3.18 port) unallocated; DATA4 (smd8)
+# answers AT commands and nothing else uses it
+DEV=/dev/smd8
 MODEM_BUILD='MPSS.JO.1.2.c4-00021-*'
 EFS_BACKUP=/data/vendor/radio/ef71_efs_orig.cfg
 
@@ -80,7 +83,7 @@ case "$carrier" in
 esac
 hidden=1
 grep -q 'feature name="android.hardware.telephony.cdma"' \
-        /system/etc/permissions/android.hardware.telephony.cdma.xml && hidden=0
+        /vendor/etc/permissions/android.hardware.telephony.cdma.xml && hidden=0
 setprop persist.vendor.ef71.hide_cdma $hide_cdma
 [ "$hidden" = "$hide_cdma" ] || reboot_for="$reboot_for cdma"
 
@@ -138,5 +141,5 @@ if ! echo "$profiles" | grep -q "^+CGDCONT: [0-9]*,\"IPV4V6\",\"$apn\","; then
 fi
 
 # rild resends the initial attach APN when it comes back
-[ $restart_ril = 1 ] && setprop ctl.restart ril-daemon
+[ $restart_ril = 1 ] && setprop ctl.restart vendor.qcrild
 exit 0

@@ -9,3 +9,6 @@ vendor_internal_prop(vendor_subsys_state_notifier_prop);
 
 # Xiaomi
 vendor_public_prop(vendor_xiaomi_prop);
+
+# EF71 SIM provisioning (init.ef71.apn.sh)
+vendor_internal_prop(vendor_ef71_sim_prop)

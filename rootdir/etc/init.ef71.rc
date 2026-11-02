@@ -136,3 +136,24 @@ on early-boot
     chown system radio /sys/class/leds/lp5523:channel8/brightness
     chmod 0660 /dev/led_fops
     chown system radio /dev/led_fops
+
+# SIM provisioning: modem EFS set for VoLTE, attach and internet APN profiles
+on property:sys.boot_completed=1
+    start vendor.ef71-apn
+
+# LG U+ USIMs carry a CSIM app that never gets ready now that the carrier has no
+# CDMA, and Android keeps such a card NOT_READY when the CDMA feature is on.
+# init.ef71.apn.sh records the SIM type; this applies before system_server starts.
+on property:persist.vendor.ef71.hide_cdma=1
+    mount none /vendor/etc/ef71_nocdma.xml /vendor/etc/permissions/android.hardware.telephony.cdma.xml bind
+
+# init.ef71.apn.sh changed something for a new SIM that is only read at boot
+on property:vendor.ef71.sim_reboot=1
+    setprop sys.powerctl reboot,ef71-sim
+
+service vendor.ef71-apn /vendor/bin/init.ef71.apn.sh
+    class late_start
+    user radio
+    group radio vendor_qti_diag
+    disabled
+    oneshot
