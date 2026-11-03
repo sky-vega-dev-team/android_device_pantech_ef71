@@ -271,7 +271,7 @@ EF71_PRODUCT_PACKAGES += \
 
 # Lights
 EF71_PRODUCT_PACKAGES += \
-    android.hardware.lights-service.xiaomi_mithorium
+    android.hardware.lights-service.ef71
 
 # LiveDisplay
 EF71_PRODUCT_PACKAGES += \

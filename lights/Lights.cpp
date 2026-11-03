@@ -1,26 +1,21 @@
 /*
- * Copyright (C) 2019 The Android Open Source Project
+ * Copyright (C) 2026 The LineageOS Project
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * SPDX-License-Identifier: Apache-2.0
  */
+
+#define LOG_TAG "lights-ef71"
 
 #include "Lights.h"
 
 #include <android-base/file.h>
 #include <android-base/logging.h>
-#include <fcntl.h>
+#include <android-base/parseint.h>
+#include <android-base/strings.h>
 
+using ::android::base::ParseInt;
 using ::android::base::ReadFileToString;
+using ::android::base::Trim;
 using ::android::base::WriteStringToFile;
 
 namespace aidl {
@@ -28,192 +23,189 @@ namespace android {
 namespace hardware {
 namespace light {
 
-#define LED_PATH(led)                       "/sys/class/leds/" led "/"
+namespace {
 
-static const std::string led_paths[] {
-    [RED] = LED_PATH("red"),
-    [GREEN] = LED_PATH("green"),
-    [BLUE] = LED_PATH("blue"),
-    [WHITE] = LED_PATH("white"),
+constexpr const char* kLcdBrightness = "/sys/class/leds/lcd-backlight/brightness";
+constexpr const char* kLcdMaxBrightness = "/sys/class/leds/lcd-backlight/max_brightness";
+
+/*
+ * The EF71 has one LP5523 for the front indicator (a left and a right RGB
+ * LED) and the menu and back key backlights. The Pantech driver takes the
+ * channel brightnesses as they are written and applies them when a command
+ * is written to channel 8 (PAN_LED_LP5523_BLINK_CMD).
+ */
+enum Lp5523Channel {
+    kLeftGreen = 0,
+    kLeftBlue = 1,
+    kRightGreen = 2,
+    kRightBlue = 3,
+    kMenuKey = 4,
+    kBackKey = 5,
+    kLeftRed = 6,
+    kRightRed = 7,
+    kCommand = 8,
 };
 
-static const std::string kLCDFile = "/sys/class/leds/lcd-backlight/brightness";
-static const std::string kLCDFile2 = "/sys/class/backlight/panel0-backlight/brightness";
-static const std::string kLCDMaxFile = "/sys/class/leds/lcd-backlight/max_brightness";
-static const std::string kLCDMaxFile2 = "/sys/class/backlight/panel0-backlight/max_brightness";
-
-static int LCD_MaxBrightness = 0;
-static bool LED_UseRedAsWhite = false;
-
-static const std::string kButtonFile = "/sys/class/leds/button-backlight/brightness";
-
-#define AutoHwLight(light) {.id = (int)light, .type = light, .ordinal = 0}
-
-// List of supported lights
-const static std::vector<HwLight> kAvailableLights = {
-    AutoHwLight(LightType::BACKLIGHT),
-    AutoHwLight(LightType::BATTERY),
-    AutoHwLight(LightType::BUTTONS),
-    AutoHwLight(LightType::NOTIFICATIONS)
+enum Lp5523Command {
+    kCmdKeys = 1,   // PWM_TK_ON_OFF: apply the menu and back key brightness
+    kCmdSolid = 3,  // PWM_HOMEKEY_ON_OFF: apply the indicator brightness
+    kCmdBlink = 8,  // DIMMING_ON_OFF_COLOR: blink the indicator
 };
 
-Lights::Lights() {
-    std::string tempstr;
-
-    mBacklightNode = !access(kLCDFile.c_str(), F_OK) ? kLCDFile : kLCDFile2;
-    mButtonExists = !access(kButtonFile.c_str(), F_OK);
-    mWhiteLed = !!access((led_paths[GREEN] + "brightness").c_str(), W_OK);
-    LED_UseRedAsWhite = mWhiteLed && !access((led_paths[RED] + "brightness").c_str(), F_OK);
-    if (LED_UseRedAsWhite)
-        mBreath = (!access(((LED_UseRedAsWhite ? led_paths[RED] : led_paths[WHITE]) + "blink").c_str(), W_OK) || !access(((LED_UseRedAsWhite ? led_paths[RED] : led_paths[WHITE]) + "breath").c_str(), W_OK));
-    else
-        mBreath = (!access(((mWhiteLed ? led_paths[WHITE] : led_paths[RED]) + "blink").c_str(), W_OK) || !access(((mWhiteLed ? led_paths[WHITE] : led_paths[RED]) + "breath").c_str(), W_OK));
-
-    ReadFileToString(!access(kLCDFile.c_str(), F_OK) ? kLCDMaxFile : kLCDMaxFile2, &tempstr, true);
-    if (!tempstr.empty()) {
-        LCD_MaxBrightness = std::stoi(tempstr);
-    }
-    if (LCD_MaxBrightness < 255)
-        LCD_MaxBrightness = 255;
-
-    LOG(INFO) << "mBacklightNode = " << mBacklightNode ;
-    LOG(INFO) << "mButtonExists = " << (mButtonExists ? "True" : "False") ;
-    LOG(INFO) << "mWhiteLed = " << (mWhiteLed ? "True" : "False") ;
-    LOG(INFO) << "mBreath = " << (mBreath ? "True" : "False") ;
-    LOG(INFO) << "LCD_MaxBrightness = " << std::to_string(LCD_MaxBrightness) ;
-    LOG(INFO) << "LED_UseRedAsWhite = " << (LED_UseRedAsWhite ? "True" : "False") ;
+std::string channelPath(int channel) {
+    return "/sys/class/leds/lp5523:channel" + std::to_string(channel) + "/brightness";
 }
 
-// AIDL methods
+bool writeInt(const std::string& path, int value) {
+    if (!WriteStringToFile(std::to_string(value), path)) {
+        PLOG(ERROR) << "Failed to write " << value << " to " << path;
+        return false;
+    }
+    return true;
+}
+
+void writeChannel(int channel, int value) {
+    writeInt(channelPath(channel), value);
+}
+
+bool isLit(const HwLightState& state) {
+    return state.color & 0x00ffffff;
+}
+
+// Brightness of an ARGB color, the alpha scaling the color as the framework intends
+uint32_t argbToBrightness(uint32_t color) {
+    uint32_t alpha = (color >> 24) & 0xff;
+    uint32_t red = (color >> 16) & 0xff;
+    uint32_t green = (color >> 8) & 0xff;
+    uint32_t blue = color & 0xff;
+
+    if (alpha != 0xff) {
+        red = red * alpha / 0xff;
+        green = green * alpha / 0xff;
+        blue = blue * alpha / 0xff;
+    }
+    return (77 * red + 150 * green + 29 * blue) >> 8;
+}
+
+#define LIGHT(t) {.id = static_cast<int>(t), .ordinal = 0, .type = t}
+
+const std::vector<HwLight> kLights = {
+        LIGHT(LightType::BACKLIGHT),
+        LIGHT(LightType::BUTTONS),
+        LIGHT(LightType::BATTERY),
+        LIGHT(LightType::NOTIFICATIONS),
+        LIGHT(LightType::ATTENTION),
+};
+
+}  // namespace
+
+Lights::Lights() : mLcdMaxBrightness(255) {
+    std::string value;
+    int max;
+
+    if (ReadFileToString(kLcdMaxBrightness, &value) && ParseInt(Trim(value), &max) && max > 0) {
+        mLcdMaxBrightness = max;
+    }
+    LOG(INFO) << "LCD max brightness " << mLcdMaxBrightness;
+}
+
 ndk::ScopedAStatus Lights::setLightState(int id, const HwLightState& state) {
-    switch (id) {
-        case (int)LightType::BACKLIGHT:
-            WriteToFile(mBacklightNode, RgbaToBrightness(state.color) * LCD_MaxBrightness / 0xFF);
+    switch (static_cast<LightType>(id)) {
+        case LightType::BACKLIGHT:
+            setBacklight(state);
             break;
-        case (int)LightType::BATTERY:
+        case LightType::BUTTONS:
+            setButtons(state);
+            break;
+        case LightType::BATTERY: {
+            std::lock_guard<std::mutex> lock(mLock);
             mBattery = state;
-            handleSpeakerBatteryLocked();
+            updateIndicatorLocked();
             break;
-        case (int)LightType::BUTTONS:
-            if (mButtonExists)
-                WriteToFile(kButtonFile, state.color & 0xFF);
-            break;
-        case (int)LightType::NOTIFICATIONS:
+        }
+        case LightType::NOTIFICATIONS: {
+            std::lock_guard<std::mutex> lock(mLock);
             mNotification = state;
-            handleSpeakerBatteryLocked();
+            updateIndicatorLocked();
             break;
+        }
+        case LightType::ATTENTION: {
+            std::lock_guard<std::mutex> lock(mLock);
+            mAttention = state;
+            // PowerManager turns the attention light off with an empty flash
+            if (mAttention.flashOnMs == 0 && mAttention.flashOffMs == 0) {
+                mAttention.color = 0;
+            }
+            updateIndicatorLocked();
+            break;
+        }
         default:
             return ndk::ScopedAStatus::fromExceptionCode(EX_UNSUPPORTED_OPERATION);
-            break;
     }
-
     return ndk::ScopedAStatus::ok();
 }
 
 ndk::ScopedAStatus Lights::getLights(std::vector<HwLight>* lights) {
-    for (auto i = kAvailableLights.begin(); i != kAvailableLights.end(); i++) {
-        lights->push_back(*i);
-    }
+    *lights = kLights;
     return ndk::ScopedAStatus::ok();
 }
 
-// device methods
-void Lights::setSpeakerLightLocked(const HwLightState& state) {
-    uint32_t alpha, red, green, blue;
-    uint32_t blink;
-    bool rc = true;
+void Lights::setBacklight(const HwLightState& state) {
+    writeInt(kLcdBrightness, argbToBrightness(state.color) * mLcdMaxBrightness / 0xff);
+}
 
-    // Extract brightness from AARRGGBB
-    alpha = (state.color >> 24) & 0xFF;
-    red = (state.color >> 16) & 0xFF;
-    green = (state.color >> 8) & 0xFF;
-    blue = state.color & 0xFF;
+void Lights::setButtons(const HwLightState& state) {
+    std::lock_guard<std::mutex> lock(mLock);
+    int brightness = argbToBrightness(state.color);
 
-    // Scale RGB brightness if Alpha brightness is not 0xFF
-    if (alpha != 0xFF) {
-        red = (red * alpha) / 0xFF;
-        green = (green * alpha) / 0xFF;
-        blue = (blue * alpha) / 0xFF;
+    writeChannel(kMenuKey, brightness);
+    writeChannel(kBackKey, brightness);
+    writeChannel(kCommand, kCmdKeys);
+}
+
+void Lights::updateIndicatorLocked() {
+    if (isLit(mAttention)) {
+        setIndicatorLocked(mAttention);
+    } else if (isLit(mNotification)) {
+        setIndicatorLocked(mNotification);
+    } else {
+        setIndicatorLocked(mBattery);
+    }
+}
+
+void Lights::setIndicatorLocked(const HwLightState& state) {
+    uint32_t alpha = (state.color >> 24) & 0xff;
+    uint32_t red = (state.color >> 16) & 0xff;
+    uint32_t green = (state.color >> 8) & 0xff;
+    uint32_t blue = state.color & 0xff;
+
+    if (alpha != 0xff) {
+        red = red * alpha / 0xff;
+        green = green * alpha / 0xff;
+        blue = blue * alpha / 0xff;
     }
 
-    blink = (state.flashOnMs != 0 && state.flashOffMs != 0);
+    bool blink = (state.flashMode == FlashMode::TIMED || state.flashMode == FlashMode::HARDWARE) &&
+                 state.flashOnMs > 0 && state.flashOffMs > 0;
 
-    switch (state.flashMode) {
-        case FlashMode::HARDWARE:
-        case FlashMode::TIMED:
-            if (mWhiteLed) {
-                rc = setLedBreath(LED_UseRedAsWhite ? RED : WHITE, blink);
-            } else {
-                if (!!red)
-                    rc = setLedBreath(RED, blink);
-                if (!!green)
-                    rc &= setLedBreath(GREEN, blink);
-                if (!!blue)
-                    rc &= setLedBreath(BLUE, blink);
-            }
-            if (rc)
-                break;
-            FALLTHROUGH_INTENDED;
-        case FlashMode::NONE:
-        default:
-            if (mWhiteLed) {
-                rc = setLedBrightness(LED_UseRedAsWhite ? RED : WHITE, RgbaToBrightness(state.color));
-            } else {
-                rc = setLedBrightness(RED, red);
-                rc &= setLedBrightness(GREEN, green);
-                rc &= setLedBrightness(BLUE, blue);
-            }
-            break;
+    // The blink program mixes at most two colors: drop the weakest of three
+    if (blink && red && green && blue && red < 0xff && green < 0xff && blue < 0xff) {
+        if (red <= green && red <= blue) {
+            red = 0;
+        } else if (green <= red && green <= blue) {
+            green = 0;
+        } else {
+            blue = 0;
+        }
     }
 
-    return;
-}
-
-void Lights::handleSpeakerBatteryLocked() {
-    if (IsLit(mBattery.color))
-        return setSpeakerLightLocked(mBattery);
-    else
-        return setSpeakerLightLocked(mNotification);
-}
-
-bool Lights::setLedBreath(led_type led, uint32_t value) {
-    if (!access((led_paths[led] + "breath").c_str(), W_OK))
-        return WriteToFile(led_paths[led] + "breath", value);
-    else
-        return WriteToFile(led_paths[led] + "blink", value);
-}
-
-bool Lights::setLedBrightness(led_type led, uint32_t value) {
-    return WriteToFile(led_paths[led] + "brightness", value);
-}
-
-// Utils
-bool Lights::IsLit(uint32_t color) {
-    return color & 0x00ffffff;
-}
-
-uint32_t Lights::RgbaToBrightness(uint32_t color) {
-    // Extract brightness from AARRGGBB.
-    uint32_t alpha = (color >> 24) & 0xFF;
-
-    // Retrieve each of the RGB colors
-    uint32_t red = (color >> 16) & 0xFF;
-    uint32_t green = (color >> 8) & 0xFF;
-    uint32_t blue = color & 0xFF;
-
-    // Scale RGB colors if a brightness has been applied by the user
-    if (alpha != 0xFF) {
-        red = red * alpha / 0xFF;
-        green = green * alpha / 0xFF;
-        blue = blue * alpha / 0xFF;
-    }
-
-    return (77 * red + 150 * green + 29 * blue) >> 8;
-}
-
-// Write value to path and close file.
-bool Lights::WriteToFile(const std::string& path, uint32_t content) {
-    return WriteStringToFile(std::to_string(content), path);
+    writeChannel(kLeftRed, red);
+    writeChannel(kLeftGreen, green);
+    writeChannel(kLeftBlue, blue);
+    writeChannel(kRightRed, red);
+    writeChannel(kRightGreen, green);
+    writeChannel(kRightBlue, blue);
+    writeChannel(kCommand, blink ? kCmdBlink : kCmdSolid);
 }
 
 }  // namespace light
