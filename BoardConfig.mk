@@ -44,6 +44,8 @@ BOARD_KERNEL_CMDLINE += androidboot.usbconfigfs=true androidboot.usbcontroller=m
 BOARD_KERNEL_CMDLINE += console=ttyMSM0,115200,n8 androidboot.console=ttyMSM0 earlycon=msm_hsl_uart,0x78b0000
 # msm-4.19 bring-up
 BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
+# Charge from DCP chargers at 2 A instead of the stock 1.8 A
+BOARD_KERNEL_CMDLINE += qpnp_smbcharger.default_dcp_icl_ma=2000
 BOARD_KERNEL_IMAGE_NAME := Image.gz-dtb
 BOARD_KERNEL_PAGESIZE := 2048
 BOARD_MKBOOTIMG_ARGS := --kernel_offset 0x00008000 --ramdisk_offset 0x01000000 --tags_offset 0x00000100
