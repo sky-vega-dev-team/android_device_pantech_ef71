@@ -462,11 +462,32 @@ PRODUCT_COPY_FILES += \
 
 PRODUCT_PACKAGES += $(EF71_PRODUCT_PACKAGES)
 
-# Qualcomm HALs (LA.UM.9.6.4 QSSI) for msm8937 on msm-4.19.
-# The HAL makefile takes its paths from LOCAL_PATH.
-LOCAL_PATH := hardware/mithorium
-$(call inherit-product-if-exists, hardware/mithorium/mithorium_qcom_hals.mk)
-LOCAL_PATH := device/pantech/ef71
+# Qualcomm audio, display and media HALs (LA.UM.9.6.4.r2-04300-89xx.QSSI13r2.0)
+USE_DEVICE_SPECIFIC_AUDIO := true
+USE_DEVICE_SPECIFIC_DISPLAY := true
+USE_DEVICE_SPECIFIC_MEDIA := true
+
+# Audio
+DEVICE_SPECIFIC_AUDIO_PATH := $(LOCAL_PATH)/qcom/audio/hal
+PRODUCT_SOONG_NAMESPACES += $(LOCAL_PATH)/qcom/audio
+TARGET_USES_QCOM_MM_AUDIO := true
+
+# Media
+MSM_VIDC_TARGET_LIST := msm8937 msm8953
+TARGET_USES_MEDIA_EXTENSIONS := true
+DEVICE_SPECIFIC_MEDIA_PATH := $(LOCAL_PATH)/qcom/media/hal
+
+# Display (QSSI compliant HAL)
+TARGET_USES_COLOR_METADATA := true
+# $(QCOM_SOONG_NAMESPACE) must be a soong namespace with the
+# display_intf_headers module under display/
+# (SOONG_CONFIG_lineageQcomVars_qcom_display_headers_namespace)
+QCOM_SOONG_NAMESPACE := $(LOCAL_PATH)/qcom/display
+DEVICE_SPECIFIC_DISPLAY_PATH := $(QCOM_SOONG_NAMESPACE)/hal
+PRODUCT_SOONG_NAMESPACES += \
+    vendor/qcom/opensource/commonsys-intf/display \
+    $(wildcard vendor/qcom/opensource/commonsys/display) \
+    $(wildcard vendor/qcom/opensource/display)
 
 # Proprietary files
 $(call inherit-product, vendor/pantech/ef71/ef71-vendor.mk)

@@ -1,0 +1,18 @@
+cc_library_shared {
+    name: "libqservice",
+    vendor: true,
+    defaults: ["display_defaults"],
+    shared_libs: ["libbinder"],
+    cflags: [
+        "-DLOG_TAG=\"qdqservice\"",
+        "-Wno-sign-conversion",
+        // Soong only exempts vendor/ and hardware/ from the manual binder check
+        "-DDO_NOT_CHECK_MANUAL_BINDER_INTERFACES",
+    ],
+    srcs: [
+        "QService.cpp",
+        "IQService.cpp",
+        "IQClient.cpp",
+        "IQHDMIClient.cpp",
+    ],
+}
