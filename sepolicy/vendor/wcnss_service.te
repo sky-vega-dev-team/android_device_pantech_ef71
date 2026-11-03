@@ -1,1 +1,5 @@
-#get_prop(wcnss_service, serialno_prop);
+set_prop(wcnss_service, vendor_wifi_version)
+
+# The QRD dynamic NV switch and the serial number are not used on the EF71
+dontaudit wcnss_service serialno_prop:file r_file_perms;
+dontaudit wcnss_service system_prop:file r_file_perms;

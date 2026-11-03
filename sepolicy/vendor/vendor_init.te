@@ -36,3 +36,6 @@ set_prop(vendor_init, vendor_fm_prop);
 set_prop(vendor_init, vendor_qcom_ims_prop);
 set_prop(vendor_init, vendor_sensors_dbg_prop);
 set_prop(vendor_init, vendor_video_prop);
+
+# /mnt/vendor/persist/data -> /secure/data
+allow vendor_init persist_drm_file:lnk_file read;

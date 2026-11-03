@@ -8,3 +8,11 @@ allow mm-qcamerad self:qipcrtr_socket { create getattr read setopt write };
 allow mm-qcamerad sysfs_graphics:file r_file_perms;
 allow mm-qcamerad sysfs_jpeg:file r_file_perms;
 allow mm-qcamerad fwk_sensor_hwservice:hwservice_manager find;
+allow mm-qcamerad camera_data_file:dir search;
+
+# Face detection keeps its album in /data/vendor/camera
+allow mm-qcamerad camera_data_file:file rw_file_perms;
+
+# The daemon reads the gyro through the framework sensor service, which
+# delivers the events with binder calls back into it
+binder_call(system_server, mm-qcamerad)

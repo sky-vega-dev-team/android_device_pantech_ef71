@@ -21,6 +21,11 @@ ro.camera.				u:object_r:camera_prop:s0
 vendor.camera.cpp.set.clock		u:object_r:camera_prop:s0
 vendor.camera.lowpower.record.enable	u:object_r:camera_prop:s0
 vidc.enc.dcvs.extra-buff-count		u:object_r:camera_prop:s0
+# Tuning knobs the mm-camera blobs read
+persist.dual.				u:object_r:camera_prop:s0
+persist.enable.max.pending.buf		u:object_r:camera_prop:s0
+persist.imglib.				u:object_r:camera_prop:s0
+ubwc.no.compression			u:object_r:camera_prop:s0
 
 # Dirac
 persist.audio.dirac.       u:object_r:dirac_prop:s0
@@ -30,8 +35,13 @@ vendor.subsys_state_notifier.		u:object_r:vendor_subsys_state_notifier_prop:s0
 
 # Wifi
 vendor.wlan.driver.ath	u:object_r:vendor_wifi_version:s0
+vendor.wlan.driver.config	u:object_r:vendor_wifi_version:s0
 
 # EF71 SIM provisioning (init.ef71.apn.sh)
 persist.vendor.ef71.hide_cdma		u:object_r:vendor_ef71_sim_prop:s0
 persist.vendor.ef71.sim_reboots		u:object_r:vendor_ef71_sim_prop:s0
 vendor.ef71.sim_reboot			u:object_r:vendor_ef71_sim_prop:s0
+
+# QTI data service apps (IWlanService, dpmserviceapp)
+persist.vendor.iwlan.logging.logcat	u:object_r:vendor_data_app_prop:s0
+persist.vendor.mwqem.enable		u:object_r:vendor_data_app_prop:s0

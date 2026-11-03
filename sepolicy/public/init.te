@@ -1,1 +1,4 @@
 set_prop(init, radio_prop);
+
+# init.ef71.rc bind mounts the EF71 APN list over the product one
+allow init system_file:file mounton;

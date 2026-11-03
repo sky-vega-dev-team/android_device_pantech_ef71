@@ -56,3 +56,7 @@
 # Sys files
 /sys/devices(/platform)?/soc/78b6000\.i2c/i2c-2/2-[0-9a-f]+/leds(/.*)?		u:object_r:sysfs_leds:s0
 /sys/devices(/platform)?/soc/leds-qpnp-[0-9]+/leds(/.*)?				u:object_r:sysfs_leds:s0
+
+# The vendor tree lives in /system/vendor, out of reach of the
+# /(odm|vendor/odm)/etc rule every domain may read
+/system/vendor/odm/etc(/.*)?						u:object_r:vendor_configs_file:s0

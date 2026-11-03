@@ -4,3 +4,6 @@ typeattribute tee data_between_core_and_vendor_violators;
 
 allow tee system_data_file:dir create_dir_perms;
 
+
+# /mnt/vendor/persist/data -> /secure/data
+allow tee persist_drm_file:lnk_file read;

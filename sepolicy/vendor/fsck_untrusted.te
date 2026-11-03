@@ -1,0 +1,3 @@
+# fsck.exfat looks up the SD card partition bounds in sysfs (coredomain
+# may not read generic sysfs); it checks the card without them
+dontaudit fsck_untrusted sysfs:file r_file_perms;

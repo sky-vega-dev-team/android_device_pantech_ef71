@@ -6,3 +6,12 @@ domain_auto_trans(qti_init_shell, ef71_modemcfg_exec, ef71_modemcfg)
 allow qti_init_shell smd_device:chr_file rw_file_perms;
 allow qti_init_shell vendor_radio_data_file:dir rw_dir_perms;
 allow qti_init_shell vendor_radio_data_file:file create_file_perms;
+
+# init.qcom.early_boot.sh
+allow qti_init_shell proc_boot_reason:file r_file_perms;
+allow qti_init_shell sysfs_leds:file setattr;
+
+# init.qcom.usb.sh sets the UVC function up
+allow qti_init_shell configfs:dir create_dir_perms;
+allow qti_init_shell configfs:file create_file_perms;
+allow qti_init_shell configfs:lnk_file create_file_perms;

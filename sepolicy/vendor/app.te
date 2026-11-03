@@ -1,1 +1,6 @@
 get_prop(appdomain, exported_camera_prop);
+
+
+# QTI data service apps
+get_prop(qtidataservices_app, vendor_data_app_prop)
+get_prop(vendor_dataservice_app, vendor_data_app_prop)

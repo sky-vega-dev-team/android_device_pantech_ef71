@@ -5,3 +5,9 @@ allow ueventd wifi_vendor_data_file:dir r_dir_perms;
 allow ueventd wifi_vendor_data_file:file r_file_perms;
 
 allow ueventd self:capability kill;
+
+# Coldboot walks into the debugfs mount
+dontaudit ueventd debugfs:dir r_dir_perms;
+dontaudit ueventd { debugfs debugfs_wakeup_sources }:file getattr;
+dontaudit ueventd debugfs:dir relabelfrom;
+dontaudit ueventd qti_debugfs:dir relabelto;
