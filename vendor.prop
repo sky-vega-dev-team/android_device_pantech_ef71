@@ -158,5 +158,3 @@ persist.vendor.cne.feature=1
 # USB gadget on the msm-4.19 UDC (configfs)
 vendor.usb.controller=msm_hsusb
 
-# msm-4.19 bring-up: adb from early boot
-persist.sys.usb.config=adb
