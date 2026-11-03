@@ -430,7 +430,7 @@ vendor/lib/liblistensoundmodel2.so
 vendor/lib/libsmwrapper.so
 vendor/lib64/hw/sound_trigger.primary.msm8937.so
 
-# Media - from Daisy QKQ1.191002.002 V11.0.5.0.QDLMIXM
+# Media - from QKQ1.191002.002
 lib/vendor.qti.hardware.vpp@1.1.so
 lib64/libstagefright_soft_flacdec.so
 lib64/vendor.qti.hardware.vpp@1.1.so
@@ -775,7 +775,7 @@ etc/firmware/ice40.bin
 vendor/bin/wcnss_service
 vendor/firmware/wlan/prima/WCNSS_cfg.dat
 
-# Wi-Fi Display - from Daisy QKQ1.191002.002 V11.0.5.0.QDLMIXM
+# Wi-Fi Display - from QKQ1.191002.002
 bin/wfdservice
 etc/init/wfdservice.rc
 etc/wfdconfig.xml

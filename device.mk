@@ -4,8 +4,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 #
-# Pantech VEGA IRON 2 (EF71) on msm-4.19, rebased on the Mi-Thorium
-# msm8937 product configuration.
+# Pantech VEGA IRON 2 (EF71) on msm-4.19: product configuration.
 #
 
 LOCAL_PATH := device/pantech/ef71
@@ -426,7 +425,7 @@ PRODUCT_BOOT_JARS += \
 
 # Thermal
 EF71_PRODUCT_PACKAGES += \
-    android.hardware.thermal@2.0-service.qti.xiaomi_mithorium
+    android.hardware.thermal@2.0-service.qti.ef71
 
 # Trust
 EF71_PRODUCT_PACKAGES += \
@@ -463,7 +462,7 @@ PRODUCT_COPY_FILES += \
 
 PRODUCT_PACKAGES += $(EF71_PRODUCT_PACKAGES)
 
-# Qualcomm HALs (LA.UM.9.6.4 QSSI, as the Mi-Thorium msm-4.19 builds).
+# Qualcomm HALs (LA.UM.9.6.4 QSSI) for msm8937 on msm-4.19.
 # The HAL makefile takes its paths from LOCAL_PATH.
 LOCAL_PATH := hardware/mithorium
 $(call inherit-product-if-exists, hardware/mithorium/mithorium_qcom_hals.mk)

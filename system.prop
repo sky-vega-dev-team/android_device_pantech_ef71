@@ -1,7 +1,7 @@
 #
 # system.prop for Pantech EF71
 #
-# Mi-Thorium msm8937 base (system.prop, system_ext.prop, system_radio.prop), then the EF71 values
+# msm8937 base (system, system_ext and radio), then the EF71 values
 #
 
 sdm.debug.disable_skip_validate=1

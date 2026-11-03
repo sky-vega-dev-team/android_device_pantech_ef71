@@ -47,7 +47,7 @@ LOCAL_SRC_FILES += \
         HAL/QCameraThermalAdapter.cpp
 endif
 
-# The LOG macros split the statement expressions (clang 12, as in land)
+# The LOG macros split the statement expressions (clang 12)
 ifeq (1,$(filter 1,$(shell echo "$$(( $(PLATFORM_SDK_VERSION) >= 31 ))" )))
 LOCAL_CFLAGS += -Wno-compound-token-split-by-macro
 endif
@@ -75,7 +75,7 @@ endif
 
 # The HAL runs in the vendor camera provider: take vsync from the display
 # service HIDL instead of libgui (VNDK-private). QCameraDisplay comes from
-# land-camera (CAF LA.UM.7), which has that path.
+# CAF LA.UM.7, which has that path.
 USE_DISPLAY_SERVICE := true
 LOCAL_CFLAGS += -DUSE_DISPLAY_SERVICE
 

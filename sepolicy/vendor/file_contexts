@@ -32,7 +32,7 @@
 
 # HALs
 /(vendor|system/vendor)/bin/hw/android\.hardware\.lights-service\.ef71                    u:object_r:hal_light_default_exec:s0
-/(vendor|system/vendor)/bin/hw/android\.hardware\.thermal@2\.0-service\.qti\.xiaomi_mithorium	u:object_r:hal_thermal_default_exec:s0
+/(vendor|system/vendor)/bin/hw/android\.hardware\.thermal@2\.0-service\.qti\.ef71	u:object_r:hal_thermal_default_exec:s0
 /(vendor|system/vendor)/lib(64)?/vulkan\.[a-z0-9]*\.so                                  u:object_r:same_process_hal_file:s0
 
 # Input devices
@@ -46,7 +46,6 @@
 /(vendor|system/vendor)/bin/init\.acdbdata\.sh				u:object_r:init_acdbdata_exec:s0
 /(vendor|system/vendor)/bin/init\.ef71\.apn\.sh				u:object_r:qti_init_shell_exec:s0
 /(vendor|system/vendor)/bin/ef71_modemcfg				u:object_r:ef71_modemcfg_exec:s0
-/(vendor|system/vendor)/bin/init\.xiaomi\..*\.sh			u:object_r:init_xiaomi_exec:s0
 
 # Sensors
 /persist/sensors(/.*)?                          u:object_r:sensors_persist_file:s0

@@ -1,7 +1,7 @@
 #
 # vendor.prop for Pantech EF71
 #
-# Mi-Thorium msm8937 base (vendor.prop, vendor_k4.19.prop, vendor_radio.prop, odm.prop), then the EF71 values
+# msm8937 base (vendor, msm-4.19, radio and odm), then the EF71 values
 #
 
 vendor.qcom.bluetooth.soc=pronto

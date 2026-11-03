@@ -4,8 +4,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 #
-# Pantech VEGA IRON 2 (EF71) on msm-4.19, rebased on the Mi-Thorium
-# msm8937 board configuration.
+# Pantech VEGA IRON 2 (EF71) on msm-4.19: board configuration.
 #
 
 DEVICE_PATH := device/pantech/ef71
