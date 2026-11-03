@@ -181,8 +181,8 @@ function 8937_sched_dcvs_eas()
         echo 768000 > /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
 
         #input boost params
-        echo 109440 > /sys/module/cpu_boost/parameters/input_boost_freq
-        echo 40 > /sys/module/cpu_boost/parameters/input_boost_ms
+        echo 0:1267200 1:0 2:0 3:0 4:1209600 5:0 6:0 7:0 > /sys/devices/system/cpu/cpu_boost/input_boost_freq
+        echo 40 > /sys/devices/system/cpu/cpu_boost/input_boost_ms
 
         # sched_load_boost as -6 is equivalent to target load as 85. It is per cpu tunable.
         echo -6 >  /sys/devices/system/cpu/cpu0/sched_load_boost
