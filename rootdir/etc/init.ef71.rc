@@ -18,9 +18,11 @@ service vendor.baseband-sh /vendor/bin/init.baseband.sh
     oneshot
     disabled
 
-# Camera
+# Camera & NFC data directories
 on post-fs-data
     mkdir /data/vendor/qcam 0770 camera camera
+    mkdir /data/vendor/nfc 0770 nfc nfc
+
 
 on property:init.svc.vendor.qcamerasvr=running
     exec /bin/sleep 1s
