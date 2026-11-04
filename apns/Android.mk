@@ -17,8 +17,14 @@ $(LOCAL_BUILT_MODULE): $(EF71_APNS_SRC) $(LOCAL_PATH)/Android.mk
 	$(hide) sed -e '/carrier="KT IA" mcc="450" mnc="08"/s/ apn="[^"]*"/ apn="ims"/' \
 	    -e '/carrier="LG U+ IA" mcc="450" mnc="06"/s/ apn="[^"]*"/ apn="ims"/' \
 	    -e '/carrier="SKT IA" mcc="450" mnc="05"/s/ apn="[^"]*"/ apn="ims"/' \
+	    -e '/carrier="KT" mcc="450" mnc="08" apn="lte.ktfwing.com"/s/ protocol="[^"]*"//g; /carrier="KT" mcc="450" mnc="08" apn="lte.ktfwing.com"/s/ roaming_protocol="[^"]*"//g; /carrier="KT" mcc="450" mnc="08" apn="lte.ktfwing.com"/s|/>| protocol="IPV4V6" roaming_protocol="IPV4V6" />|' \
+	    -e '/carrier="SKT LTE INTERNET" mcc="450" mnc="05"/s/ protocol="[^"]*"//g; /carrier="SKT LTE INTERNET" mcc="450" mnc="05"/s/ roaming_protocol="[^"]*"//g; /carrier="SKT LTE INTERNET" mcc="450" mnc="05"/s|/>| protocol="IPV4V6" roaming_protocol="IPV4V6" />|' \
+	    -e '/carrier="LG U+" mcc="450" mnc="06" apn="internet.lguplus.co.kr"/s/ protocol="[^"]*"//g; /carrier="LG U+" mcc="450" mnc="06" apn="internet.lguplus.co.kr"/s/ roaming_protocol="[^"]*"//g; /carrier="LG U+" mcc="450" mnc="06" apn="internet.lguplus.co.kr"/s|/>| protocol="IPV4V6" roaming_protocol="IPV4V6" />|' \
 	    $< > $@.tmp
 	$(hide) grep -q 'carrier="KT IA" mcc="450" mnc="08" apn="ims"' $@.tmp
 	$(hide) grep -q 'carrier="LG U+ IA" mcc="450" mnc="06" apn="ims"' $@.tmp
 	$(hide) grep -q 'carrier="SKT IA" mcc="450" mnc="05" apn="ims"' $@.tmp
+	$(hide) grep -q 'carrier="KT" mcc="450" mnc="08" apn="lte.ktfwing.com".*protocol="IPV4V6".*roaming_protocol="IPV4V6"' $@.tmp
+	$(hide) grep -q 'carrier="SKT LTE INTERNET" mcc="450" mnc="05" apn="lte.sktelecom.com".*protocol="IPV4V6".*roaming_protocol="IPV4V6"' $@.tmp
+	$(hide) grep -q 'carrier="LG U+" mcc="450" mnc="06" apn="internet.lguplus.co.kr".*protocol="IPV4V6".*roaming_protocol="IPV4V6"' $@.tmp
 	$(hide) mv $@.tmp $@

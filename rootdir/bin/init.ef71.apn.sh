@@ -22,7 +22,7 @@ export PATH=/vendor/bin
 # modem leaves DATA11 (smd11, the msm-3.18 port) unallocated; DATA4 (smd8)
 # answers AT commands and nothing else uses it
 DEV=/dev/smd8
-MODEM_BUILD='MPSS.JO.1.2.c4-00021-*'
+MODEM_BUILD='MPSS.JO.1.2.c4-*'
 EFS_BACKUP=/data/vendor/radio/ef71_efs_orig.cfg
 
 at_cmd() {
