@@ -22,6 +22,15 @@ service vendor.baseband-sh /vendor/bin/init.baseband.sh
 on post-fs-data
     mkdir /data/vendor/qcam 0770 camera camera
     mkdir /data/vendor/nfc 0770 nfc nfc
+    mkdir /mnt/vendor/persist/sensors 0775 system system
+    mkdir /mnt/vendor/persist/sensors/registry 0775 system system
+    mkdir /mnt/vendor/persist/sensors/registry/registry 0775 system system
+    chown system system /mnt/vendor/persist/sensors
+    chown system system /mnt/vendor/persist/sensors/registry
+    chown system system /mnt/vendor/persist/sensors/registry/registry
+    write /mnt/vendor/persist/sensors/sensors_settings 1
+    chown system system /mnt/vendor/persist/sensors/sensors_settings
+    chmod 0664 /mnt/vendor/persist/sensors/sensors_settings
 
 
 on property:init.svc.vendor.qcamerasvr=running

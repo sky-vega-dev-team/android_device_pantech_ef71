@@ -31,11 +31,18 @@
 #
 start_sensors()
 {
-
-    chmod -h 664 /persist/sensors/sensors_settings
-    chown -h -R system.system /persist/sensors
+    for p in /mnt/vendor/persist/sensors /persist/sensors; do
+        mkdir -p "$p/registry/registry"
+        if [ ! -f "$p/sensors_settings" ]; then
+            echo -n 1 > "$p/sensors_settings"
+        fi
+        chmod 775 "$p"
+        chmod 775 "$p/registry"
+        chmod 775 "$p/registry/registry"
+        chmod 664 "$p/sensors_settings"
+        chown -R system:system "$p"
+    done
     start vendor.sensors.qti
-
 }
 
 start_sensors

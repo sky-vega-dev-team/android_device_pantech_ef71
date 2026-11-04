@@ -191,4 +191,5 @@ service vendor.sensors.qti /vendor/bin/sensors.qti
     class core
     user system
     group system
+    capabilities NET_BIND_SERVICE
     disabled
