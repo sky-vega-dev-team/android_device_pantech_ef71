@@ -157,13 +157,15 @@ function 8937_sched_dcvs_eas()
         # enable governor for perf cluster
         echo 1 > /sys/devices/system/cpu/cpu0/online
         echo "schedutil" > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor
+        # ramp up at once, hold the clock for a frame before dropping it
         echo 0 > /sys/devices/system/cpu/cpufreq/policy0/schedutil/up_rate_limit_us
-        echo 0 > /sys/devices/system/cpu/cpufreq/policy0/schedutil/down_rate_limit_us
+        echo 20000 > /sys/devices/system/cpu/cpufreq/policy0/schedutil/down_rate_limit_us
         #set the hispeed_freq
-        echo 1094400 > /sys/devices/system/cpu/cpufreq/policy0/schedutil/hispeed_freq
+        echo 1267200 > /sys/devices/system/cpu/cpufreq/policy0/schedutil/hispeed_freq
         #default value for hispeed_load is 90, for 8937 it should be 85
         echo 85 > /sys/devices/system/cpu/cpufreq/policy0/schedutil/hispeed_load
-        echo 0 > /sys/devices/system/cpu/cpufreq/policy0/schedutil/pl
+        # scale on the WALT predicted load
+        echo 1 > /sys/devices/system/cpu/cpufreq/policy0/schedutil/pl
         echo 0 > /sys/devices/system/cpu/cpufreq/policy0/schedutil/rtg_boost_freq
 
         echo 960000 > /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
@@ -171,18 +173,30 @@ function 8937_sched_dcvs_eas()
         ## enable governor for power cluster
         echo 1 > /sys/devices/system/cpu/cpu4/online
         echo "schedutil" > /sys/devices/system/cpu/cpufreq/policy4/scaling_governor
+        echo 0 > /sys/devices/system/cpu/cpufreq/policy4/schedutil/up_rate_limit_us
+        echo 16000 > /sys/devices/system/cpu/cpufreq/policy4/schedutil/down_rate_limit_us
         #set the hispeed_freq
-        echo 768000 > /sys/devices/system/cpu/cpufreq/policy4/schedutil/hispeed_freq
+        echo 998400 > /sys/devices/system/cpu/cpufreq/policy4/schedutil/hispeed_freq
         #default value for hispeed_load is 90, for 8937 it should be 85
         echo 85 > /sys/devices/system/cpu/cpufreq/policy4/schedutil/hispeed_load
-        echo 0 > /sys/devices/system/cpu/cpufreq/policy4/schedutil/pl
+        echo 1 > /sys/devices/system/cpu/cpufreq/policy4/schedutil/pl
         echo 0 > /sys/devices/system/cpu/cpufreq/policy4/schedutil/rtg_boost_freq
 
         echo 768000 > /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
 
         #input boost params
         echo 0:1267200 1:0 2:0 3:0 4:1209600 5:0 6:0 7:0 > /sys/devices/system/cpu/cpu_boost/input_boost_freq
-        echo 40 > /sys/devices/system/cpu/cpu_boost/input_boost_ms
+        echo 80 > /sys/devices/system/cpu/cpu_boost/input_boost_ms
+
+        # 16 ms WALT window, one 60 Hz frame (4 ticks; HZ=250 kernels only)
+        echo 4 > /proc/sys/kernel/sched_ravg_window_nr_ticks
+
+        # top-app: a small boost, and keep it on idle CPUs
+        echo 10 > /dev/stune/top-app/schedtune.boost
+        echo 1 > /dev/stune/top-app/schedtune.prefer_idle
+
+        # eMMC: mq-deadline costs less CPU than BFQ on the A53s
+        echo mq-deadline > /sys/block/mmcblk0/queue/scheduler
 
         # sched_load_boost as -6 is equivalent to target load as 85. It is per cpu tunable.
         echo -6 >  /sys/devices/system/cpu/cpu0/sched_load_boost
