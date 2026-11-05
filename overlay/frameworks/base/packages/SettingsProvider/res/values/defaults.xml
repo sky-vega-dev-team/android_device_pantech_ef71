@@ -18,4 +18,9 @@
 -->
 <resources>
     <bool name="def_screen_brightness_automatic_mode">true</bool>
+
+    <!-- Double tap to wake keeps the panel and LAB/IBB up while the screen
+         is off, which costs standby power. Leave it off until the user
+         turns it on. -->
+    <bool name="def_double_tap_to_wake">false</bool>
 </resources>

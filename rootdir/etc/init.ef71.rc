@@ -62,6 +62,10 @@ on property:hw.fm.init=*
 on boot
     enable vendor.qcrild
 
+    # Double tap to wake, set by the power HAL
+    chown system system /sys/devices/platform/soc/78b7000.i2c/i2c-3/3-004a/dt2w_enable
+    chown system system /sys/devices/virtual/touchscreen/touchscreen_dev/gesture_ctrl
+
 on property:vendor.subsys_state_notifier.modem.state=OFFLINE
     stop vendor.qcrild
 

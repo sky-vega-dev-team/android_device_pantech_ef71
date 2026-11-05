@@ -1,6 +1,10 @@
 # Boot reason
 genfscon proc  /sys/kernel/boot_reason   u:object_r:proc_boot_reason:s0
 
+# Double tap to wake (EF71S: Atmel mXT641T, EF71AS: FocalTech FT8716)
+genfscon sysfs /devices/platform/soc/78b7000.i2c/i2c-3/3-004a/dt2w_enable	u:object_r:sysfs_tap_to_wake:s0
+genfscon sysfs /devices/virtual/touchscreen/touchscreen_dev/gesture_ctrl	u:object_r:sysfs_tap_to_wake:s0
+
 # FDT
 genfscon sysfs /firmware/devicetree/base/compatible		u:object_r:fdt_compatible:s0
 genfscon sysfs /firmware/devicetree/base/model			u:object_r:fdt_model:s0

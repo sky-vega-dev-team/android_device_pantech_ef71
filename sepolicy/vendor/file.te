@@ -23,3 +23,6 @@ type sysfs_kernel_sdhci_msm, fs_type, sysfs_type;
 
 # Subsystem
 type sysfs_modem_subsys, fs_type, sysfs_type;
+
+# Double tap to wake
+type sysfs_tap_to_wake, fs_type, sysfs_type;
