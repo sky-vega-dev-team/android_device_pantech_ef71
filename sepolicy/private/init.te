@@ -1,0 +1,2 @@
+# init.ef71.parts.rc switches the multi-gen LRU on and off
+allow init sysfs_lru_gen:file w_file_perms;

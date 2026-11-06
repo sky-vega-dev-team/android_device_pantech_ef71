@@ -1,0 +1,6 @@
+# Multi-gen LRU, switched from Settings > System > Enhanced memory management
+on property:persist.sys.ef71.mglru=1
+    write /sys/kernel/mm/lru_gen/enabled y
+
+on property:persist.sys.ef71.mglru=0
+    write /sys/kernel/mm/lru_gen/enabled n

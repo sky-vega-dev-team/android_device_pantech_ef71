@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2026 The LineageOS Project
+
+     SPDX-License-Identifier: Apache-2.0
+-->
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/mglru_title">
+
+    <com.android.settingslib.widget.MainSwitchPreference
+        android:key="mglru_enable"
+        android:title="@string/mglru_enable" />
+
+    <com.android.settingslib.widget.FooterPreference
+        android:key="mglru_footer"
+        android:title="@string/mglru_footer"
+        android:selectable="false" />
+
+</PreferenceScreen>

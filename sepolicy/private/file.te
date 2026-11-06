@@ -1,0 +1,2 @@
+# Multi-gen LRU switch
+type sysfs_lru_gen, fs_type, sysfs_type;

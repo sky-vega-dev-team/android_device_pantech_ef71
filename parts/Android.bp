@@ -1,0 +1,29 @@
+//
+// Copyright (C) 2026 The LineageOS Project
+//
+// SPDX-License-Identifier: Apache-2.0
+//
+
+android_app {
+    name: "EF71Parts",
+
+    srcs: ["src/**/*.java"],
+    resource_dirs: ["res"],
+    certificate: "platform",
+    platform_apis: true,
+    privileged: true,
+    system_ext_specific: true,
+
+    static_libs: [
+        "org.lineageos.settings.resources",
+    ],
+
+    required: ["init.ef71.parts.rc"],
+}
+
+prebuilt_etc {
+    name: "init.ef71.parts.rc",
+    src: "init.ef71.parts.rc",
+    sub_dir: "init",
+    system_ext_specific: true,
+}

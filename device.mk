@@ -349,6 +349,10 @@ DEVICE_PACKAGE_OVERLAYS += \
 PRODUCT_ENFORCE_RRO_TARGETS := *
 PRODUCT_ENFORCE_RRO_EXCLUDED_OVERLAYS += $(LOCAL_PATH)/overlay-radio/packages/apps/CarrierConfig
 
+# Parts
+EF71_PRODUCT_PACKAGES += \
+    EF71Parts
+
 # Perf
 EF71_PRODUCT_PACKAGES += \
     vendor.qti.hardware.perf@2.2 \

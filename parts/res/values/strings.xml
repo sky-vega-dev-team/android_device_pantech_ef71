@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2026 The LineageOS Project
+
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources>
+    <string name="device_settings_app_name">EF71 settings</string>
+
+    <string name="mglru_title">Enhanced memory management (MGLRU)</string>
+    <string name="mglru_summary">Keep more apps in the background</string>
+    <string name="mglru_enable">Use enhanced memory management</string>
+    <string name="mglru_footer">Uses the multi-gen LRU to decide which memory to reclaim. Background apps are closed less often and reopen faster, but the first scroll right after switching back to an app may stutter briefly while its memory is read back.</string>
+    <string name="mglru_unsupported">Not supported by the running kernel</string>
+</resources>

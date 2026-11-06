@@ -1,0 +1,2 @@
+# Multi-gen LRU switch
+genfscon sysfs /kernel/mm/lru_gen	u:object_r:sysfs_lru_gen:s0

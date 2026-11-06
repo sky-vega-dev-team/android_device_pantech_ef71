@@ -1,0 +1,3 @@
+# EF71Parts checks that the kernel has the multi-gen LRU
+allow system_app sysfs_lru_gen:dir search;
+allow system_app sysfs_lru_gen:file getattr;
