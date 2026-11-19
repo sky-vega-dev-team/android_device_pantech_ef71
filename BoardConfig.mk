@@ -35,30 +35,28 @@ BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
 TARGET_BOOTLOADER_BOARD_NAME := msm8937
 TARGET_NO_BOOTLOADER := true
 
-# Kernel
+# Kernel (mainline)
 BOARD_KERNEL_BASE := 0x80000000
-BOARD_KERNEL_CMDLINE := androidboot.hardware=qcom msm_rtb.filter=0x237 ehci-hcd.park=3 lpm_levels.sleep_disabled=1 androidboot.bootdevice=7824900.sdhci loop.max_part=7
-BOARD_KERNEL_CMDLINE += androidboot.boot_devices=soc/7824900.sdhci
-BOARD_KERNEL_CMDLINE += androidboot.usbconfigfs=true androidboot.usbcontroller=msm_hsusb androidboot.init_fatal_reboot_target=bootloader printk.devkmsg=on
-BOARD_KERNEL_CMDLINE += console=ttyMSM0,115200,n8 androidboot.console=ttyMSM0 earlycon=msm_hsl_uart,0x78b0000
-# msm-4.19 bring-up
+BOARD_KERNEL_CMDLINE := androidboot.hardware=qcom loop.max_part=7 printk.devkmsg=on
+BOARD_KERNEL_CMDLINE += androidboot.bootdevice=7824900.mmc androidboot.boot_devices=soc@0/7824900.mmc
+BOARD_KERNEL_CMDLINE += androidboot.usbconfigfs=true androidboot.usbcontroller=ci_hdrc.0
+BOARD_KERNEL_CMDLINE += androidboot.init_fatal_reboot_target=recovery
+# Firmware of the remote processors, from the mounted modem partition
+BOARD_KERNEL_CMDLINE += firmware_class.path=/vendor/firmware_mnt/image
+# Bring-up
 BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
-# Charge from DCP chargers at 2 A instead of the stock 1.8 A
-BOARD_KERNEL_CMDLINE += qpnp_smbcharger.default_dcp_icl_ma=2000
-BOARD_KERNEL_IMAGE_NAME := Image.gz-dtb
+BOARD_KERNEL_IMAGE_NAME := Image.gz
+# The Pantech aboot picks the DTB appended to the kernel by board id
+BOARD_KERNEL_APPEND_DTBS := qcom/msm8937-pantech-ef71.dtb
 BOARD_KERNEL_PAGESIZE := 2048
 BOARD_MKBOOTIMG_ARGS := --kernel_offset 0x00008000 --ramdisk_offset 0x01000000 --tags_offset 0x00000100
-TARGET_KERNEL_VERSION := 4.19
+TARGET_KERNEL_CLANG_VERSION := r510928
+# The CUDA/HIP path flags kernel.mk adds by default trip -Werror in mainline
+KERNEL_CC := CC=clang
 TARGET_KERNEL_SOURCE := kernel/pantech/msm8937
-TARGET_KERNEL_ADDITIONAL_FLAGS := LLVM=1
 TARGET_KERNEL_CONFIG := \
-    vendor/msm8937-perf_defconfig \
-    vendor/common.config \
-    vendor/msm8937-legacy.config \
-    vendor/feature/android-12.config \
-    vendor/feature/exfat.config \
-    vendor/feature/lmkd.config \
-    vendor/pantech/msm8937/ef71.config
+    msm8916_defconfig \
+    ef71.config
 
 # ANT
 BOARD_ANT_WIRELESS_DEVICE := "vfs-prerelease"
