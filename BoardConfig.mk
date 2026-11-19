@@ -35,6 +35,9 @@ BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
 TARGET_BOOTLOADER_BOARD_NAME := msm8937
 TARGET_NO_BOOTLOADER := true
 
+# Graphics
+BOARD_GPU_DRIVERS := freedreno
+
 # Kernel (mainline)
 BOARD_KERNEL_BASE := 0x80000000
 BOARD_KERNEL_CMDLINE := androidboot.hardware=qcom loop.max_part=7 printk.devkmsg=on

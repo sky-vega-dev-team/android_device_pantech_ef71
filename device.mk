@@ -149,31 +149,22 @@ PRODUCT_COPY_FILES += \
 EF71_PRODUCT_PACKAGES += \
     disable_configstore
 
-# Display
+# Display (mainline: DRM/KMS through drm_hwcomposer, buffers from minigbm,
+# GPU through Mesa freedreno)
 EF71_PRODUCT_PACKAGES += \
-    vendor.qti.hardware.display.allocator-service \
-    vendor.qti.hardware.display.mapper@2.0.vendor \
-    vendor.qti.hardware.display.mapper@3.0.vendor \
-    vendor.qti.hardware.display.mapper@4.0.vendor \
-    vendor.qti.hardware.display.mapperextensions@1.1.vendor \
-    android.hardware.graphics.mapper@3.0-impl-qti-display \
-    android.hardware.graphics.mapper@4.0-impl-qti-display \
-    libgralloc.qti \
-    gralloc.msm8937 \
-    android.frameworks.displayservice@1.0.vendor \
-    android.hardware.graphics.composer@2.1-service \
-    hwcomposer.msm8937 \
-    android.hardware.memtrack@1.0-impl \
-    android.hardware.memtrack@1.0-service \
-    memtrack.msm8937 \
-    libdisplayconfig \
-    libqdMetaData \
-    libtinyxml \
-    vendor.display.config@1.11.vendor \
-    vendor.display.config@2.0.vendor
+    android.hardware.graphics.composer@2.4-service \
+    hwcomposer.drm \
+    android.hardware.graphics.allocator@4.0-service.minigbm_msm \
+    android.hardware.graphics.mapper@4.0-impl.minigbm_msm \
+    gralloc.minigbm_msm \
+    libGLES_mesa \
+    android.frameworks.displayservice@1.0.vendor
 
 PRODUCT_VENDOR_PROPERTIES += \
-    ro.hardware.vulkan=adreno
+    ro.hardware.egl=mesa \
+    ro.hardware.gralloc=minigbm_msm \
+    ro.hardware.hwcomposer=drm \
+    ro.opengles.version=196608
 
 # DRM
 EF71_PRODUCT_PACKAGES += \
@@ -268,10 +259,6 @@ EF71_PRODUCT_PACKAGES += \
 # Lights
 EF71_PRODUCT_PACKAGES += \
     android.hardware.lights-service.ef71
-
-# LiveDisplay
-EF71_PRODUCT_PACKAGES += \
-    vendor.lineage.livedisplay@2.0-service-sdm
 
 # Media
 PRODUCT_COPY_FILES += \
@@ -510,6 +497,7 @@ TARGET_USES_COLOR_METADATA := true
 QCOM_SOONG_NAMESPACE := $(LOCAL_PATH)/qcom/display
 DEVICE_SPECIFIC_DISPLAY_PATH := $(QCOM_SOONG_NAMESPACE)/hal
 PRODUCT_SOONG_NAMESPACES += \
+    external/mesa3d \
     vendor/qcom/opensource/commonsys-intf/display \
     $(wildcard vendor/qcom/opensource/commonsys/display) \
     $(wildcard vendor/qcom/opensource/display)
