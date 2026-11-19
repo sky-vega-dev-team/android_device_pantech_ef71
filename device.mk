@@ -13,6 +13,9 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/userspace_reboot.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
 $(call inherit-product, frameworks/native/build/phone-xhdpi-2048-dalvik-heap.mk)
 
+# Add common definitions for Qualcomm
+$(call inherit-product, hardware/qcom-caf/common/common.mk)
+
 # Boot animation
 TARGET_SCREEN_HEIGHT := 1920
 TARGET_SCREEN_WIDTH := 1080
@@ -458,6 +461,22 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/wifi/WCNSS_qcom_cfg.ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/WCNSS_qcom_cfg.ini \
     $(LOCAL_PATH)/wifi/WCNSS_qcom_wlan_nv.bin:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/WCNSS_qcom_wlan_nv.bin \
     $(LOCAL_PATH)/wifi/WCNSS_wlan_dictionary.dat:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/WCNSS_wlan_dictionary.dat
+
+# Symlinks
+EF71_PRODUCT_PACKAGES += \
+    CneApp.libvndfwk_detect_jni.qti_symlink \
+    ims_libimscamera_jni.so_symlink \
+    ims_libimsmedia_jni.so_symlink \
+    libEGL_adreno_symlink32 \
+    libGLESv2_adreno_symlink32 \
+    libq3dtools_adreno_symlink32 \
+    libEGL_adreno_symlink64 \
+    libGLESv2_adreno_symlink64 \
+    libq3dtools_adreno_symlink64 \
+    firmware_WCNSS_qcom_cfg.ini_symlink \
+    firmware_WCNSS_qcom_wlan_nv.bin_symlink \
+    firmware_WCNSS_wlan_dictionary.dat_symlink \
+    firmware_wlan_mac.bin_symlink
 
 PRODUCT_PACKAGES += $(EF71_PRODUCT_PACKAGES)
 
