@@ -44,8 +44,6 @@ BOARD_KERNEL_CMDLINE := androidboot.hardware=qcom loop.max_part=7 printk.devkmsg
 BOARD_KERNEL_CMDLINE += androidboot.bootdevice=7824900.mmc androidboot.boot_devices=soc@0/7824900.mmc
 BOARD_KERNEL_CMDLINE += androidboot.usbconfigfs=true androidboot.usbcontroller=ci_hdrc.0
 BOARD_KERNEL_CMDLINE += androidboot.init_fatal_reboot_target=recovery
-# Firmware of the remote processors, from the mounted modem partition
-BOARD_KERNEL_CMDLINE += firmware_class.path=/vendor/firmware_mnt/image
 # Bring-up
 BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
 BOARD_KERNEL_IMAGE_NAME := Image.gz
