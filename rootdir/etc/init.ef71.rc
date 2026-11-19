@@ -18,6 +18,10 @@ service vendor.baseband-sh /vendor/bin/init.baseband.sh
     oneshot
     disabled
 
+# GPS
+on property:persist.sys.xtra-daemon.enabled=*
+    restart loc_launcher
+
 # Camera & NFC data directories
 on post-fs-data
     mkdir /data/vendor/qcam 0770 camera camera
