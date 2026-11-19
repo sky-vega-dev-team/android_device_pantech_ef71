@@ -160,3 +160,27 @@ vendor.usb.controller=msm_hsusb
 
 # msm-4.19 bring-up: adb from early boot
 persist.sys.usb.config=adb
+
+# Bluetooth
+bluetooth.device.class_of_device=90,2,12
+# Pronto knows neither the LE vendor capabilities nor the APCF extended
+# features: the stack asserts on the LE_ADV_FILTER replies otherwise
+bluetooth.core.le.vendor_capabilities.enabled=false
+bluetooth.le.disable_apcf_extended_features=1
+bluetooth.sco.disable_enhanced_connection=true
+
+# Bluetooth profiles: the ones of the stock firmware, without SAP and the
+# hearing aid central role
+bluetooth.profile.a2dp.source.enabled?=true
+bluetooth.profile.asha.central.enabled?=false
+bluetooth.profile.avrcp.target.enabled?=true
+bluetooth.profile.bas.client.enabled?=true
+bluetooth.profile.gatt.enabled?=true
+bluetooth.profile.hfp.ag.enabled?=true
+bluetooth.profile.hid.device.enabled?=true
+bluetooth.profile.hid.host.enabled?=true
+bluetooth.profile.map.server.enabled?=true
+bluetooth.profile.opp.enabled?=true
+bluetooth.profile.pan.nap.enabled?=true
+bluetooth.profile.pan.panu.enabled?=true
+bluetooth.profile.pbap.server.enabled?=true
