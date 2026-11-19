@@ -48,7 +48,6 @@ persist.omacp.enable=true
 persist.mmssupportcp.enable=true
 ro.vendor.qti.va_aosp.support=1
 ro.bluetooth.a2dp_offload.supported=false
-ro.charger.disable_init_blank=true
 ro.fastbootd.available=true
 debug.renderengine.backend=threaded
 persist.sys.binary_xml=false
