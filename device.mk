@@ -434,7 +434,7 @@ EF71_PRODUCT_PACKAGES += \
 
 # USB
 EF71_PRODUCT_PACKAGES += \
-    android.hardware.usb@1.0-service.basic
+    android.hardware.usb@1.3-service.basic
 
 # Vibrator
 EF71_PRODUCT_PACKAGES += \
