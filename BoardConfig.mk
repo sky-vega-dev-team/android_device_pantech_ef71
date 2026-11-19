@@ -191,6 +191,11 @@ VENDOR_SECURITY_PATCH := 2019-05-01
 
 # SELinux
 include device/qcom/sepolicy-legacy-um/SEPolicy.mk
+# The platform allows the su domain on all builds, against the neverallows
+# of the prebuilt API policies the Treble compatibility tests build
+ifneq ($(TARGET_BUILD_VARIANT),user)
+SELINUX_IGNORE_NEVERALLOWS := true
+endif
 BOARD_VENDOR_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/vendor
 SYSTEM_EXT_PUBLIC_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/public
 SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/private
