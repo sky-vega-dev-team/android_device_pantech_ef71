@@ -56,8 +56,8 @@ on property:sys.usb.ffs.ready=1
 
 on fs
     write /sys/kernel/sdhci_msm/add_host 1
-    wait /dev/block/platform/soc/${ro.boot.bootdevice}
-    symlink /dev/block/platform/soc/${ro.boot.bootdevice} /dev/block/bootdevice
+    wait /dev/block/platform/soc@0/${ro.boot.bootdevice}
+    symlink /dev/block/platform/soc@0/${ro.boot.bootdevice} /dev/block/bootdevice
 
 # Charger
 service hvdcp_opti /system/bin/hvdcp_opti
