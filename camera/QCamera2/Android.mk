@@ -63,6 +63,8 @@ LOCAL_CFLAGS += -include device/pantech/ef71/camera/ef71_camera_features.h
 LOCAL_CFLAGS += -DCONFIG_MACH_MSM8937_EF71S
 
 LOCAL_CFLAGS += -DHAS_MULTIMEDIA_HINTS -D_ANDROID
+# Legacy QCamera2 uses String8::string() and String8::isEmpty().
+LOCAL_CFLAGS += -DENABLE_STRING8_OBSOLETE_METHODS
 
 ifeq ($(TARGET_USES_AOSP),true)
 LOCAL_CFLAGS += -DVANILLA_HAL
