@@ -79,23 +79,13 @@ EF71_PRODUCT_PACKAGES += \
     audio.bluetooth.default \
     audio.r_submix.default \
     audio.usb.default \
-    audio.primary.msm8937 \
+    audio.primary.default \
     libaudiopreprocessing \
     libaudioroute \
     libaacwrapper \
     libaudio-resampler \
     libqcomvisualizer \
-    libqcomvoiceprocessing \
-    libqcompostprocbundle \
-    libvolumelistener \
-    libtinycompress \
-    liba2dpoffload \
-    libbatterylistener \
-    libcomprcapture \
-    libexthwplugin \
-    libhdmiedid \
-    libhfp \
-    libsndmonitor
+    libqcomvoiceprocessing
 
 # WCD9335 with one WSA8810, from the EF71 LineageOS 17.1 tree
 PRODUCT_COPY_FILES += \
@@ -126,16 +116,9 @@ EF71_PRODUCT_PACKAGES += \
     vendor.qti.hardware.btconfigstore@2.0.vendor \
     vendor.qti.hardware.bluetooth_audio@2.1.vendor
 
-# Camera
+# Camera: the Qualcomm camera HAL needs the msm-4.19 camera interfaces
 EF71_PRODUCT_PACKAGES += \
     android.frameworks.sensorservice@1.0.vendor \
-    android.hardware.camera.provider@2.4-impl \
-    android.hardware.camera.provider@2.4-service \
-    camera.msm8937 \
-    libmmcamera_interface \
-    libmmjpeg_interface \
-    libqomx_core \
-    vendor.qti.hardware.camera.device@1.0.vendor \
     libstdc++_vendor
 
 PRODUCT_COPY_FILES += \
@@ -241,11 +224,6 @@ EF71_PRODUCT_PACKAGES += \
     fstab.qcom \
     fstab.qcom_ramdisk
 
-# IPA
-EF71_PRODUCT_PACKAGES += \
-    ipacm \
-    IPACM_cfg.xml
-
 # Keylayout
 PRODUCT_COPY_FILES += \
     $(call find-copy-subdir-files,*,$(LOCAL_PATH)/keylayout/,$(TARGET_COPY_OUT_VENDOR)/usr/keylayout/)
@@ -266,13 +244,9 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/media/msm8937/media_profiles_8937.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_profiles_vendor.xml \
     $(LOCAL_PATH)/media/msm8937/media_profiles_8956.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/media_profiles_8956.xml \
     $(LOCAL_PATH)/media/msm8937/media_profiles_8956.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_profiles_8956.xml \
-    $(LOCAL_PATH)/media/msm8937/media_codecs.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs.xml \
-    $(LOCAL_PATH)/media/msm8937/media_codecs_vendor.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_vendor.xml \
-    $(LOCAL_PATH)/media/msm8937/media_codecs_8937_v1.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_8937_v1.xml \
-    $(LOCAL_PATH)/media/msm8937/media_codecs_8956.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_8956.xml \
+    $(LOCAL_PATH)/media/media_codecs_mainline.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs.xml \
     $(LOCAL_PATH)/media/msm8937/media_codecs_performance_8937.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_performance.xml \
     $(LOCAL_PATH)/media/msm8937/media_codecs_performance_8937.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_performance_vendor.xml \
-    $(LOCAL_PATH)/media/msm8937/media_codecs_vendor_audio.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_vendor_audio.xml \
     $(LOCAL_PATH)/media/media_profiles.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_profiles.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_audio.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_telephony.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_telephony.xml \
@@ -283,18 +257,7 @@ PRODUCT_COPY_FILES += \
     frameworks/av/media/libstagefright/data/media_codecs_google_c2_video.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_c2_video.xml
 
 EF71_PRODUCT_PACKAGES += \
-    libavservices_minijail.vendor \
-    libc2dcolorconvert \
-    libmm-omxcore \
-    libOmxAacEnc \
-    libOmxAmrEnc \
-    libOmxCore \
-    libOmxEvrcEnc \
-    libOmxG711Enc \
-    libOmxQcelp13Enc \
-    libOmxVdec \
-    libOmxVenc \
-    libstagefrighthw
+    libavservices_minijail.vendor
 
 # Modem configuration (Korean carriers)
 EF71_PRODUCT_PACKAGES += \
@@ -380,7 +343,6 @@ EF71_PRODUCT_PACKAGES += \
     android.hardware.secure_element@1.0.vendor \
     android.hardware.secure_element@1.1.vendor \
     android.hardware.secure_element@1.2.vendor \
-    librmnetctl \
     libshim_qcrild \
     libxml2 \
     subsystem_state_notifier

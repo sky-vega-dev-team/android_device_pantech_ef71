@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    The Qualcomm OMX codecs need the msm-4.19 video interfaces: on the
+    mainline kernel use the Codec2 software codecs.
+-->
+<MediaCodecs>
+    <Include href="media_codecs_google_c2.xml" />
+</MediaCodecs>
