@@ -371,6 +371,8 @@ PRODUCT_COPY_FILES += \
 # QTI
 EF71_PRODUCT_PACKAGES += \
     libjson \
+    libnetutils.vendor:64 \
+    libsqlite.vendor:64 \
     libqti_vndfwk_detect \
     libqti_vndfwk_detect.vendor \
     libvndfwk_detect_jni.qti \
@@ -405,11 +407,17 @@ PRODUCT_AAPT_PREF_CONFIG := xxhdpi
 EF71_PRODUCT_PACKAGES += \
     android.hardware.sensors@1.0-impl \
     android.hardware.sensors@1.0-service \
+    libpower.vendor:64 \
     libsensorndkbridge
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/sensors/hals.conf:$(TARGET_COPY_OUT_VENDOR)/etc/sensors/hals.conf \
     $(LOCAL_PATH)/configs/sensors/sensor_def_qcomdev.conf:$(TARGET_COPY_OUT_VENDOR)/etc/sensors/sensor_def_qcomdev.conf
+
+# Shims
+EF71_PRODUCT_PACKAGES += \
+    libcrypto-v33 \
+    libprotobuf-cpp-full-3.9.1-vendorcompat
 
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += \
