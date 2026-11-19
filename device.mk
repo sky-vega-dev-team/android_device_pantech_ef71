@@ -135,7 +135,7 @@ EF71_PRODUCT_PACKAGES += \
     libmmjpeg_interface \
     libqomx_core \
     vendor.qti.hardware.camera.device@1.0.vendor \
-    libstdc++.vendor
+    libstdc++_vendor
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/camera/imx214_chromatix.xml:$(TARGET_COPY_OUT_VENDOR)/etc/camera/imx214_chromatix.xml \
