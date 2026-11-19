@@ -132,6 +132,10 @@ PRODUCT_COPY_FILES += \
 EF71_PRODUCT_PACKAGES += \
     disable_configstore
 
+# Firmware
+EF71_PRODUCT_PACKAGES += \
+    firmware_image_symlink
+
 # Display (mainline: DRM/KMS through drm_hwcomposer, buffers from minigbm,
 # GPU through Mesa freedreno)
 EF71_PRODUCT_PACKAGES += \

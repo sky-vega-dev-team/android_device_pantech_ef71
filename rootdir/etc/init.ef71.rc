@@ -179,8 +179,6 @@ service vendor.ef71-apn /vendor/bin/init.ef71.apn.sh
 # Mainline drivers that load firmware from /vendor/firmware or the modem
 # partition are modules: load them once the partitions are mounted.
 on early-boot
-    # Fail missing firmware fast instead of waiting a minute for each
-    write /sys/class/firmware/timeout 1
     exec u:r:vendor_modprobe:s0 -- /vendor/bin/modprobe -a -d /vendor/lib/modules \
         qcom_pd_mapper qcom_memshare qcom_q6v5_mss qcom_bam_dmux rmnet \
         qcom_wcnss_pil wcnss_ctrl wcn36xx btqcomsmd \

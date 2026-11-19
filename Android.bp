@@ -87,3 +87,11 @@ install_symlink {
     installed_location: "firmware/wlan/prima/wlan_mac.bin",
     symlink_target: "/mnt/vendor/persist/wlan_mac.bin",
 }
+
+// Remote processor images, under the kernel firmware search path
+install_symlink {
+    name: "firmware_image_symlink",
+    vendor: true,
+    installed_location: "firmware/image",
+    symlink_target: "/vendor/firmware_mnt/image",
+}
