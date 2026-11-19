@@ -65,9 +65,6 @@ EF71_PRODUCT_PACKAGES += \
     AntHalService \
     com.dsi.ant@1.0.vendor
 
-# APEX
-OVERRIDE_TARGET_FLATTEN_APEX := true
-OVERRIDE_PRODUCT_COMPRESSED_APEX := false
 
 # Audio
 EF71_PRODUCT_PACKAGES += \
