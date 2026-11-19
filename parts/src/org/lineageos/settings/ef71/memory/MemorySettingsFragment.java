@@ -8,19 +8,19 @@ package org.lineageos.settings.ef71.memory;
 
 import android.os.Bundle;
 import android.os.SystemProperties;
-import android.widget.Switch;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 
 import androidx.preference.PreferenceFragment;
 
 import com.android.settingslib.widget.MainSwitchPreference;
-import com.android.settingslib.widget.OnMainSwitchChangeListener;
 
 import org.lineageos.settings.ef71.R;
 
 import java.io.File;
 
 public class MemorySettingsFragment extends PreferenceFragment
-        implements OnMainSwitchChangeListener {
+        implements OnCheckedChangeListener {
 
     private static final String PREF_ENABLE = "mglru_enable";
 
@@ -43,7 +43,7 @@ public class MemorySettingsFragment extends PreferenceFragment
     }
 
     @Override
-    public void onSwitchChanged(Switch switchView, boolean isChecked) {
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         SystemProperties.set(PROP_MGLRU, isChecked ? "1" : "0");
     }
 }

@@ -10,7 +10,7 @@
 
     <uses-sdk
         android:minSdkVersion="31"
-        android:targetSdkVersion="31" />
+        android:targetSdkVersion="34" />
 
     <application
         android:label="@string/device_settings_app_name"
