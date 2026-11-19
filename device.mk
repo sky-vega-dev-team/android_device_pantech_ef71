@@ -446,7 +446,7 @@ EF71_PRODUCT_PACKAGES += \
     libwpa_client \
     hostapd \
     wificond \
-    WifiOverlay \
+    WifiOverlayEF71 \
     wpa_supplicant \
     wpa_supplicant.conf
 
