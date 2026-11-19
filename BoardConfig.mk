@@ -135,15 +135,11 @@ DEVICE_FRAMEWORK_MANIFEST_FILE := $(DEVICE_PATH)/framework_manifest.xml
 DEVICE_MANIFEST_FILE := \
     $(DEVICE_PATH)/manifest.xml \
     $(DEVICE_PATH)/manifest_k4.19.xml \
-    $(DEVICE_PATH)/configs/manifest/cryptfshw.xml \
     $(DEVICE_PATH)/configs/manifest/gatekeeper.xml \
     $(DEVICE_PATH)/configs/manifest/keymaster.xml \
     $(DEVICE_PATH)/configs/manifest/nfc.xml \
     $(DEVICE_PATH)/configs/manifest/radio.xml
 DEVICE_MATRIX_FILE := $(DEVICE_PATH)/compatibility_matrix.xml
-
-# HW crypto
-TARGET_HW_DISK_ENCRYPTION := true
 
 # Init
 TARGET_INIT_VENDOR_LIB := //$(DEVICE_PATH):init_pantech_ef71
