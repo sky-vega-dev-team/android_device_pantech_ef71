@@ -53,6 +53,25 @@ if [ -z "${SRC}" ]; then
     SRC="adb"
 fi
 
+function blob_fixup() {
+    case "${1}" in
+        vendor/lib/libchromaflash.so \
+        | vendor/lib/libmmcamera_hdr_gb_lib.so \
+        | vendor/lib/liboptizoom.so \
+        | vendor/lib/libseemore.so \
+        | vendor/lib/libtrueportrait.so \
+        | vendor/lib/libts_detected_face_hal.so \
+        | vendor/lib/libts_face_beautify_hal.so \
+        | vendor/lib/libubifocus.so)
+            "${PATCHELF}" --replace-needed "libstdc++.so" "libstdc++_vendor.so" "${2}"
+            ;;
+        vendor/lib64/libwvhidl.so|vendor/lib64/mediadrm/libwvdrmengine.so)
+            "${PATCHELF}" --replace-needed "libcrypto.so" "libcrypto-v33.so" "${2}"
+            sed -i 's|libprotobuf-cpp-lite-3.9.1.so|libprotobuf-cpp-full-3.9.1.so|g' "${2}"
+            ;;
+    esac
+}
+
 # Initialize the helper
 setup_vendor "${DEVICE}" "${VENDOR}" "${LINEAGE_ROOT}" false "${CLEAN_VENDOR}"
 
