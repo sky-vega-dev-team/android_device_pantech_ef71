@@ -1677,8 +1677,8 @@ OMX_ERRORTYPE  omx_venc::set_parameter(OMX_IN OMX_HANDLETYPE     hComp,
                     }
                 if((pParam->eHierarchicalCodingType == QOMX_HIERARCHICALCODING_B) && pParam->nNumLayers)
                     hier_b_enabled = true;
-                    m_sHierLayers.nNumLayers = pParam->nNumLayers;
-                    m_sHierLayers.eHierarchicalCodingType = pParam->eHierarchicalCodingType;
+                m_sHierLayers.nNumLayers = pParam->nNumLayers;
+                m_sHierLayers.eHierarchicalCodingType = pParam->eHierarchicalCodingType;
                 } else {
                     DEBUG_PRINT_ERROR("ERROR: OMX_QcomIndexHierarchicalStructure called on wrong port(%u)",
                           (unsigned int)pParam->nPortIndex);
