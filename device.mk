@@ -109,12 +109,15 @@ PRODUCT_COPY_FILES += \
     frameworks/av/services/audiopolicy/config/usb_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/usb_audio_policy_configuration.xml
 
 
-# Bluetooth
+# Bluetooth: the AOSP HAL drives the WCN3660 through the btqcomsmd hci0,
+# whose public address bdaddr sets from the serial number
 EF71_PRODUCT_PACKAGES += \
-    android.hardware.bluetooth@1.0.vendor \
-    vendor.qti.hardware.btconfigstore@1.0.vendor \
-    vendor.qti.hardware.btconfigstore@2.0.vendor \
-    vendor.qti.hardware.bluetooth_audio@2.1.vendor
+    android.hardware.bluetooth-service.default \
+    bdaddr
+
+# The WCN3660 controller lacks the extended APCF features
+PRODUCT_VENDOR_PROPERTIES += \
+    bluetooth.le.disable_apcf_extended_features=1
 
 # Camera: the Qualcomm camera HAL needs the msm-4.19 camera interfaces
 EF71_PRODUCT_PACKAGES += \

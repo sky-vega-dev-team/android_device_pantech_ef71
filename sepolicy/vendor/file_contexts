@@ -60,3 +60,7 @@
 # The vendor tree lives in /system/vendor, out of reach of the
 # /(odm|vendor/odm)/etc rule every domain may read
 /system/vendor/odm/etc(/.*)?						u:object_r:vendor_configs_file:s0
+
+# Bluetooth address
+/(vendor|system/vendor)/bin/hw/bdaddr                    u:object_r:set_bdaddr_exec:s0
+/(vendor|system/vendor)/bin/set_bdaddr\.sh               u:object_r:set_bdaddr_exec:s0
