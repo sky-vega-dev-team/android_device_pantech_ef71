@@ -48,8 +48,8 @@ BOARD_KERNEL_CMDLINE += androidboot.init_fatal_reboot_target=recovery
 # GPU microcode in /vendor/firmware, remote processor images under its
 # image/ link to the modem partition
 BOARD_KERNEL_CMDLINE += firmware_class.path=/vendor/firmware
-# Bring-up
-BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
+# Bring-up; keep SELinux audit spam out of the kernel log
+BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive audit=0
 BOARD_KERNEL_IMAGE_NAME := Image.gz
 # The Pantech aboot picks the DTB appended to the kernel by board id
 BOARD_KERNEL_APPEND_DTBS := qcom/msm8937-pantech-ef71.dtb
