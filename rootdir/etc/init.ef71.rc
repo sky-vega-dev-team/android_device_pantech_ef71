@@ -1,4 +1,12 @@
 
+# Mainline has no ashmem: HIDL message queues and other shared memory
+# need memfd, which init.rc turns off again in post-fs-data
+on early-init
+    setprop sys.use_memfd true
+
+on post-fs-data
+    setprop sys.use_memfd true
+
 # Acdbdata
 service vendor.acdbdata-sh /vendor/bin/init.acdbdata.sh
     class hal
