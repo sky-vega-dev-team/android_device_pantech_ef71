@@ -1,0 +1,5 @@
+# Extension of frameworks/av/services/mediaextractor/seccomp_policy/mediaextractor-arm64.policy
+# Shared memory comes from memfd on the mainline kernel
+memfd_create: 1
+ftruncate: 1
+fcntl: 1
