@@ -187,6 +187,6 @@ service vendor.ef71-apn /vendor/bin/init.ef71.apn.sh
 # partition are modules: load them once the partitions are mounted.
 on early-boot
     exec u:r:vendor_modprobe:s0 -- /vendor/bin/modprobe -a -d /vendor/lib/modules \
-        qcom_pd_mapper qcom_memshare qcom_q6v5_mss qcom_bam_dmux rmnet \
+        qcom_pd_mapper qcom_memshare qcom_q6v5_mss qcom_q6v5_pas qcom_bam_dmux rmnet \
         qcom_wcnss_pil wcnss_ctrl wcn36xx btqcomsmd \
         venus-core venus-dec venus-enc
