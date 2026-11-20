@@ -228,6 +228,14 @@ EF71_PRODUCT_PACKAGES += \
     fstab.qcom \
     fstab.qcom_ramdisk
 
+# Modem: remote file systems and the TFTP server it reads its files from
+EF71_PRODUCT_PACKAGES += \
+    libqrtr \
+    qrtr-cfg \
+    qrtr-lookup \
+    rmtfs \
+    tqftpserv
+
 # Seccomp
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/seccomp_policy/mediaextractor.policy:$(TARGET_COPY_OUT_VENDOR)/etc/seccomp_policy/mediaextractor.policy
@@ -374,6 +382,7 @@ EF71_PRODUCT_PACKAGES += \
 
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += \
+    hardware/mainline/qcom \
     $(LOCAL_PATH)
 
 # Telephony

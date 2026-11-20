@@ -7,6 +7,35 @@ on early-init
 on post-fs-data
     setprop sys.use_memfd true
 
+# Modem: rmtfs serves the EFS partitions and boots the modem once ready.
+# Read only for now, the EFS holds the IMEI and RF calibration.
+service vendor.rmtfs /vendor/bin/rmtfs -o /dev/block/by-name -P -r -s
+    class core
+    user root
+    group system
+    stdio_to_kmsg
+    disabled
+
+service vendor.tqftpserv /vendor/bin/tqftpserv
+    class core
+    user root
+    group system
+    stdio_to_kmsg
+    disabled
+
+on post-fs-data
+    mkdir /data/vendor/tmp
+    mkdir /data/vendor/tmp/tqftpserv
+    mkdir /data/vendor/readonly
+    mkdir /data/vendor/readonly/firmware
+    mkdir /data/vendor/readonly/firmware/image
+    mkdir /data/vendor/readwrite
+    start vendor.tqftpserv
+    start vendor.rmtfs
+
+on shutdown
+    stop vendor.rmtfs
+
 # Acdbdata
 service vendor.acdbdata-sh /vendor/bin/init.acdbdata.sh
     class hal
