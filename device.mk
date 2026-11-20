@@ -402,8 +402,6 @@ EF71_PRODUCT_PACKAGES += \
 # Wi-Fi
 EF71_PRODUCT_PACKAGES += \
     android.hardware.wifi@1.0-service \
-    libcld80211 \
-    libwifi-hal-ctrl \
     libwpa_client \
     hostapd \
     wificond \

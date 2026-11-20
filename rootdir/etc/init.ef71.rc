@@ -112,7 +112,6 @@ on property:sys.boot_completed=1
 
 # Wi-Fi
 on init
-    chown wifi wifi /sys/module/wlan/parameters/fwpath
 
 # Write caching
 on property:ro.vendor.ef71.enable_write_caching=1
