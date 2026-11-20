@@ -181,8 +181,7 @@ EF71_PRODUCT_PACKAGES += \
 # Health
 EF71_PRODUCT_PACKAGES += \
     android.hardware.health-service.qti \
-    android.hardware.health-service.qti_recovery \
-    vendor.lineage.health-service.default
+    android.hardware.health-service.qti_recovery
 
 # HIDL
 EF71_PRODUCT_PACKAGES += \
