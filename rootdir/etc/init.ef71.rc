@@ -215,7 +215,23 @@ service vendor.ef71-apn /vendor/bin/init.ef71.apn.sh
 # Mainline drivers that load firmware from /vendor/firmware or the modem
 # partition are modules: load them once the partitions are mounted.
 on early-boot
+    # The SLIMbus controller learns that the ADSP is up from its SSR
+    # notification, which is not replayed: register it before the ADSP boots
     exec u:r:vendor_modprobe:s0 -- /vendor/bin/modprobe -a -d /vendor/lib/modules \
+        slim-qcom-ngd-ctrl \
         qcom_pd_mapper qcom_memshare qcom_q6v5_mss qcom_q6v5_pas qcom_bam_dmux rmnet \
         qcom_wcnss_pil wcnss_ctrl wcn36xx btqcomsmd \
-        venus-core venus-dec venus-enc
+        venus-core venus-dec venus-enc \
+        apr q6core q6afe q6afe-dai q6afe-clocks q6asm q6asm-dai q6adm q6routing \
+        snd-soc-wcd9335 snd-soc-apq8096
+    # The sensor daemon hands the registry from persist to the ADSP, which
+    # reports no sensors until then: get it going before the HAL asks
+    start vendor.sensors.qti
+    start vendor.wlan_mac
+
+service vendor.wlan_mac /vendor/bin/init.ef71.wlan_mac.sh
+    user root
+    group root
+    capabilities NET_ADMIN
+    oneshot
+    disabled

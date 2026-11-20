@@ -221,6 +221,7 @@ EF71_PRODUCT_PACKAGES += \
     init.ef71.apn.sh \
     init.qcom.early_boot.sh \
     init.qcom.post_boot.sh \
+    init.ef71.wlan_mac.sh \
     init.qcom.sensors.sh \
     init.qcom.sh \
     init.qcom.usb.sh \

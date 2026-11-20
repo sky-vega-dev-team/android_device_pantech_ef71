@@ -72,3 +72,4 @@
 /data/vendor/tmp(/.*)?                                   u:object_r:tqftpserv_vendor_data_file:s0
 /(vendor|system/vendor)/bin/rmtfs                        u:object_r:rmtfs_exec:s0
 /(vendor|system/vendor)/bin/tqftpserv                    u:object_r:tqftpserv_exec:s0
+/(vendor|system/vendor)/bin/init\.ef71\.wlan_mac\.sh         u:object_r:qti_init_shell_exec:s0
