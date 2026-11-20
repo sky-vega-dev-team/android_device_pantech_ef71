@@ -35,8 +35,9 @@ BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
 TARGET_BOOTLOADER_BOARD_NAME := msm8937
 TARGET_NO_BOOTLOADER := true
 
-# Graphics
-BOARD_GPU_DRIVERS := freedreno
+# Graphics (Mesa, external/mesa built with meson)
+BOARD_MESA3D_USES_MESON_BUILD := true
+BOARD_MESA3D_GALLIUM_DRIVERS := freedreno
 
 # Kernel (mainline)
 BOARD_KERNEL_BASE := 0x80000000
