@@ -150,6 +150,7 @@ EF71_PRODUCT_PACKAGES += \
 PRODUCT_VENDOR_PROPERTIES += \
     ro.hardware.egl=mesa \
     ro.hardware.gralloc=minigbm_msm \
+    vendor.minigbm.debug=nocompression \
     ro.hardware.hwcomposer=drm \
     ro.opengles.version=196608
 
