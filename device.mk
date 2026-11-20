@@ -147,7 +147,7 @@ EF71_PRODUCT_PACKAGES += \
     android.hardware.graphics.allocator@4.0-service.minigbm_msm \
     android.hardware.graphics.mapper@4.0-impl.minigbm_msm \
     gralloc.minigbm_msm \
-    mesa3d \
+    libGLES_mesa \
     android.frameworks.displayservice@1.0.vendor
 
 PRODUCT_VENDOR_PROPERTIES += \
@@ -471,6 +471,7 @@ TARGET_USES_COLOR_METADATA := true
 QCOM_SOONG_NAMESPACE := $(LOCAL_PATH)/qcom/display
 DEVICE_SPECIFIC_DISPLAY_PATH := $(QCOM_SOONG_NAMESPACE)/hal
 PRODUCT_SOONG_NAMESPACES += \
+    external/mesa3d \
     vendor/qcom/opensource/commonsys-intf/display \
     $(wildcard vendor/qcom/opensource/commonsys/display) \
     $(wildcard vendor/qcom/opensource/display)
