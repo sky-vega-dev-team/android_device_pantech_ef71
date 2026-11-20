@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+     SPDX-License-Identifier: Apache-2.0
+
+     TinyHAL configuration for the EF71 on the mainline kernel: the Q6
+     ASM/ADM/AFE path of the ADSP into a WCD9335 on SLIMbus.
+
+     Playback runs from MultiMedia1 (pcm 0) into SLIMBUS_0_RX and the codec
+     AIF1, capture from SLIMBUS_0_TX into MultiMedia2 (pcm 1).
+
+     The loudspeaker is a WSA8810 on the WCD9335 SoundWire master, which the
+     mainline codec driver does not drive yet: route "speaker" to the
+     earpiece until it does, so there is sound at all.
+-->
+<audiohal>
+    <mixer card="0">
+        <init>
+            <ctl name="SLIMBUS_0_RX Audio Mixer MultiMedia1" val="0"/>
+            <ctl name="MultiMedia2 Mixer SLIMBUS_0_TX" val="0"/>
+            <ctl name="RX0 Digital Volume" val="84"/>
+            <ctl name="RX1 Digital Volume" val="84"/>
+            <ctl name="RX2 Digital Volume" val="84"/>
+            <ctl name="HPHL Volume" val="20"/>
+            <ctl name="HPHR Volume" val="20"/>
+            <ctl name="RX HPH Mode" val="CLS_H_HIFI"/>
+        </init>
+    </mixer>
+
+    <device name="global">
+        <path name="pcm_out_en">
+            <ctl name="SLIMBUS_0_RX Audio Mixer MultiMedia1" val="1"/>
+        </path>
+        <path name="pcm_out_dis">
+            <ctl name="SLIMBUS_0_RX Audio Mixer MultiMedia1" val="0"/>
+        </path>
+        <path name="pcm_in_en">
+            <ctl name="MultiMedia2 Mixer SLIMBUS_0_TX" val="1"/>
+            <ctl name="AIF1_CAP Mixer SLIM TX8" val="1"/>
+            <ctl name="SLIM TX8 MUX" val="DEC8"/>
+            <ctl name="ADC MUX8" val="AMIC"/>
+        </path>
+        <path name="pcm_in_dis">
+            <ctl name="MultiMedia2 Mixer SLIMBUS_0_TX" val="0"/>
+            <ctl name="AIF1_CAP Mixer SLIM TX8" val="0"/>
+            <ctl name="SLIM TX8 MUX" val="ZERO"/>
+            <ctl name="AMIC MUX8" val="ZERO"/>
+        </path>
+    </device>
+
+    <device name="earpiece">
+        <path name="on">
+            <ctl name="SLIM RX0 MUX" val="AIF1_PB"/>
+            <ctl name="SLIM RX1 MUX" val="AIF1_PB"/>
+            <ctl name="RX INT0_1 MIX1 INP0" val="RX0"/>
+            <ctl name="RX INT0 DEM MUX" val="CLSH_DSM_OUT"/>
+        </path>
+        <path name="off">
+            <ctl name="RX INT0_1 MIX1 INP0" val="ZERO"/>
+        </path>
+    </device>
+
+    <!-- No WSA8810 driver yet: the earpiece stands in for the speaker -->
+    <device name="speaker">
+        <path name="on">
+            <ctl name="SLIM RX0 MUX" val="AIF1_PB"/>
+            <ctl name="SLIM RX1 MUX" val="AIF1_PB"/>
+            <ctl name="RX INT0_1 MIX1 INP0" val="RX0"/>
+            <ctl name="RX INT0 DEM MUX" val="CLSH_DSM_OUT"/>
+        </path>
+        <path name="off">
+            <ctl name="RX INT0_1 MIX1 INP0" val="ZERO"/>
+        </path>
+    </device>
+
+    <device name="headphone">
+        <path name="on">
+            <ctl name="SLIM RX0 MUX" val="AIF1_PB"/>
+            <ctl name="SLIM RX1 MUX" val="AIF1_PB"/>
+            <ctl name="RX INT1_2 MUX" val="RX0"/>
+            <ctl name="RX INT2_2 MUX" val="RX1"/>
+            <ctl name="RX INT1 DEM MUX" val="CLSH_DSM_OUT"/>
+            <ctl name="RX INT2 DEM MUX" val="CLSH_DSM_OUT"/>
+        </path>
+        <path name="off">
+            <ctl name="RX INT1_2 MUX" val="ZERO"/>
+            <ctl name="RX INT2_2 MUX" val="ZERO"/>
+        </path>
+    </device>
+
+    <device name="headset">
+        <path name="on">
+            <ctl name="SLIM RX0 MUX" val="AIF1_PB"/>
+            <ctl name="SLIM RX1 MUX" val="AIF1_PB"/>
+            <ctl name="RX INT1_2 MUX" val="RX0"/>
+            <ctl name="RX INT2_2 MUX" val="RX1"/>
+            <ctl name="RX INT1 DEM MUX" val="CLSH_DSM_OUT"/>
+            <ctl name="RX INT2 DEM MUX" val="CLSH_DSM_OUT"/>
+        </path>
+        <path name="off">
+            <ctl name="RX INT1_2 MUX" val="ZERO"/>
+            <ctl name="RX INT2_2 MUX" val="ZERO"/>
+        </path>
+    </device>
+
+    <!-- Handset microphone on AMIC3, biased by MIC BIAS1 -->
+    <device name="mic">
+        <path name="on">
+            <ctl name="AMIC MUX8" val="ADC3"/>
+            <ctl name="ADC3 Volume" val="14"/>
+        </path>
+    </device>
+
+    <!-- Secondary microphone on AMIC4, biased by MIC BIAS3 -->
+    <device name="back mic">
+        <path name="on">
+            <ctl name="AMIC MUX8" val="ADC4"/>
+            <ctl name="ADC4 Volume" val="14"/>
+        </path>
+    </device>
+
+    <!-- Headset microphone on AMIC2, biased by MIC BIAS2 -->
+    <device name="headset_in">
+        <path name="on">
+            <ctl name="AMIC MUX8" val="ADC2"/>
+            <ctl name="ADC2 Volume" val="14"/>
+        </path>
+    </device>
+
+    <stream type="pcm" dir="out" card="0" device="0">
+        <enable path="pcm_out_en"/>
+        <disable path="pcm_out_dis"/>
+    </stream>
+
+    <stream type="pcm" dir="in" card="0" device="1">
+        <enable path="pcm_in_en"/>
+        <disable path="pcm_in_dis"/>
+    </stream>
+</audiohal>
