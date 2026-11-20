@@ -169,9 +169,7 @@ EF71_PRODUCT_PACKAGES += \
 
 # Gatekeeper
 EF71_PRODUCT_PACKAGES += \
-    android.hardware.gatekeeper@1.0-impl \
-    android.hardware.gatekeeper@1.0-service \
-    android.hardware.gatekeeper@1.0.vendor
+    android.hardware.gatekeeper@1.0-service.software
 
 # GPS
 include $(LOCAL_PATH)/gps/gps_vendor_product.mk
@@ -224,7 +222,6 @@ EF71_PRODUCT_PACKAGES += \
     init.qcom.sh \
     init.qcom.usb.sh \
     init.qti.dcvs.sh \
-    init.qti.qseecomd.sh \
     fstab.qcom \
     fstab.qcom_ramdisk
 
@@ -232,11 +229,9 @@ EF71_PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
     $(call find-copy-subdir-files,*,$(LOCAL_PATH)/keylayout/,$(TARGET_COPY_OUT_VENDOR)/usr/keylayout/)
 
-# Keymaster
+# KeyMint (software, mainline has no QSEECom)
 EF71_PRODUCT_PACKAGES += \
-    android.hardware.keymaster@3.0-impl \
-    android.hardware.keymaster@3.0-service \
-    android.hardware.keymaster@3.0.vendor
+    android.hardware.security.keymint-service
 
 # Lights
 EF71_PRODUCT_PACKAGES += \
