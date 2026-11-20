@@ -411,8 +411,8 @@ EF71_PRODUCT_PACKAGES += \
     vendor.qti.hardware.vibrator.service
 
 # Wi-Fi
+# No vendor Wi-Fi HAL: its legacy part only knows the Qualcomm prima driver
 EF71_PRODUCT_PACKAGES += \
-    android.hardware.wifi@1.0-service \
     libwpa_client \
     hostapd \
     wificond \
