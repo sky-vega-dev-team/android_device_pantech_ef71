@@ -230,7 +230,6 @@ EF71_PRODUCT_PACKAGES += \
 
 # Modem: remote file systems and the TFTP server it reads its files from
 EF71_PRODUCT_PACKAGES += \
-    libqrtr \
     qrtr-cfg \
     qrtr-lookup \
     rmtfs \
