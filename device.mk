@@ -289,6 +289,12 @@ PRODUCT_COPY_FILES += \
 PRODUCT_VENDOR_PROPERTIES += \
     debug.c2.use_dmabufheaps=1
 
+# Persistent input surfaces, which the camera records through, come from the
+# OMX service unless Codec2 makes them, and there is no OMX service: have the
+# framework make them in process.
+PRODUCT_VENDOR_PROPERTIES += \
+    debug.stagefright.c2inputsurface=-1
+
 # Video: the Venus codecs of the mainline kernel through the V4L2 Codec2 HAL.
 # Their codec list, media/media_codecs_c2_venus.xml, goes to
 # $(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_c2.xml once decoding is clean.
