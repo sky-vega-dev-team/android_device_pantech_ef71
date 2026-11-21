@@ -30,9 +30,8 @@ constexpr const char* kLcdMaxBrightness = "/sys/class/leds/lcd-backlight/max_bri
 
 /*
  * The EF71 has one LP5523 for the front indicator (a left and a right RGB
- * LED) and the menu and back key backlights. The Pantech driver takes the
- * channel brightnesses as they are written and applies them when a command
- * is written to channel 8 (PAN_LED_LP5523_BLINK_CMD).
+ * LED) and the menu and back key backlights. The mainline driver applies
+ * each channel brightness as it is written.
  */
 enum Lp5523Channel {
     kLeftGreen = 0,
@@ -43,13 +42,6 @@ enum Lp5523Channel {
     kBackKey = 5,
     kLeftRed = 6,
     kRightRed = 7,
-    kCommand = 8,
-};
-
-enum Lp5523Command {
-    kCmdKeys = 1,   // PWM_TK_ON_OFF: apply the menu and back key brightness
-    kCmdSolid = 3,  // PWM_HOMEKEY_ON_OFF: apply the indicator brightness
-    kCmdBlink = 8,  // DIMMING_ON_OFF_COLOR: blink the indicator
 };
 
 std::string channelPath(int channel) {
@@ -107,6 +99,17 @@ Lights::Lights() : mLcdMaxBrightness(255) {
         mLcdMaxBrightness = max;
     }
     LOG(INFO) << "LCD max brightness " << mLcdMaxBrightness;
+
+    mBlinkThread = std::thread(&Lights::blinkLoop, this);
+}
+
+Lights::~Lights() {
+    {
+        std::lock_guard<std::mutex> lock(mLock);
+        mExit = true;
+    }
+    mBlinkCv.notify_all();
+    mBlinkThread.join();
 }
 
 ndk::ScopedAStatus Lights::setLightState(int id, const HwLightState& state) {
@@ -160,7 +163,6 @@ void Lights::setButtons(const HwLightState& state) {
 
     writeChannel(kMenuKey, brightness);
     writeChannel(kBackKey, brightness);
-    writeChannel(kCommand, kCmdKeys);
 }
 
 void Lights::updateIndicatorLocked() {
@@ -188,24 +190,51 @@ void Lights::setIndicatorLocked(const HwLightState& state) {
     bool blink = (state.flashMode == FlashMode::TIMED || state.flashMode == FlashMode::HARDWARE) &&
                  state.flashOnMs > 0 && state.flashOffMs > 0;
 
-    // The blink program mixes at most two colors: drop the weakest of three
-    if (blink && red && green && blue && red < 0xff && green < 0xff && blue < 0xff) {
-        if (red <= green && red <= blue) {
-            red = 0;
-        } else if (green <= red && green <= blue) {
-            green = 0;
-        } else {
-            blue = 0;
-        }
+    mBlinkGeneration++;
+    mBlinking = blink && (red || green || blue);
+    if (mBlinking) {
+        mBlinkRed = red;
+        mBlinkGreen = green;
+        mBlinkBlue = blue;
+        mBlinkOnMs = state.flashOnMs;
+        mBlinkOffMs = state.flashOffMs;
+        mBlinkCv.notify_all();
+        return;
     }
 
+    writeIndicator(red, green, blue);
+    mBlinkCv.notify_all();
+}
+
+void Lights::writeIndicator(uint32_t red, uint32_t green, uint32_t blue) {
     writeChannel(kLeftRed, red);
     writeChannel(kLeftGreen, green);
     writeChannel(kLeftBlue, blue);
     writeChannel(kRightRed, red);
     writeChannel(kRightGreen, green);
     writeChannel(kRightBlue, blue);
-    writeChannel(kCommand, blink ? kCmdBlink : kCmdSolid);
+}
+
+void Lights::blinkLoop() {
+    std::unique_lock<std::mutex> lock(mLock);
+
+    while (!mExit) {
+        if (!mBlinking) {
+            mBlinkCv.wait(lock);
+            continue;
+        }
+
+        uint64_t generation = mBlinkGeneration;
+
+        writeIndicator(mBlinkRed, mBlinkGreen, mBlinkBlue);
+        if (mBlinkCv.wait_for(lock, std::chrono::milliseconds(mBlinkOnMs),
+                              [&] { return mExit || mBlinkGeneration != generation; }))
+            continue;
+
+        writeIndicator(0, 0, 0);
+        mBlinkCv.wait_for(lock, std::chrono::milliseconds(mBlinkOffMs),
+                          [&] { return mExit || mBlinkGeneration != generation; });
+    }
 }
 
 }  // namespace light

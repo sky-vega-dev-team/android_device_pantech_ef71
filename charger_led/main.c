@@ -6,9 +6,8 @@
  * Charging indicator for the EF71 (IM-100) in off-mode charging and
  * recovery, on the LP5523 that drives the front indicator.
  *
- * The Pantech LP5523 driver takes the channel brightnesses as they are
- * written and applies them when a command is written to channel 8:
- * 0 turns the indicator off, 3 shows the color and 8 blinks it.
+ * The mainline LP5523 driver applies each channel brightness as it is
+ * written; the low battery blink toggles the channels itself.
  */
 
 #include <cutils/klog.h>
@@ -43,13 +42,6 @@ enum lp5523_channel {
     RIGHT_BLUE = 3,
     LEFT_RED = 6,
     RIGHT_RED = 7,
-    COMMAND = 8,
-};
-
-enum lp5523_command {
-    CMD_OFF = 0,    // EF59_LED_OFF
-    CMD_SOLID = 3,  // PWM_HOMEKEY_ON_OFF
-    CMD_BLINK = 8,  // DIMMING_ON_OFF_COLOR
 };
 
 enum led_mode { MODE_OFF, MODE_SOLID, MODE_BLINK };
@@ -79,19 +71,22 @@ static bool write_channel(int channel, int value) {
     return ret == len;
 }
 
-static bool set_led(const struct led_state* state) {
+static bool write_color(int red, int green, int blue) {
     bool ok = true;
 
-    if (state->mode == MODE_OFF) return write_channel(COMMAND, CMD_OFF);
-
-    ok &= write_channel(LEFT_RED, state->red);
-    ok &= write_channel(LEFT_GREEN, state->green);
-    ok &= write_channel(LEFT_BLUE, state->blue);
-    ok &= write_channel(RIGHT_RED, state->red);
-    ok &= write_channel(RIGHT_GREEN, state->green);
-    ok &= write_channel(RIGHT_BLUE, state->blue);
-    ok &= write_channel(COMMAND, state->mode == MODE_BLINK ? CMD_BLINK : CMD_SOLID);
+    ok &= write_channel(LEFT_RED, red);
+    ok &= write_channel(LEFT_GREEN, green);
+    ok &= write_channel(LEFT_BLUE, blue);
+    ok &= write_channel(RIGHT_RED, red);
+    ok &= write_channel(RIGHT_GREEN, green);
+    ok &= write_channel(RIGHT_BLUE, blue);
     return ok;
+}
+
+static bool set_led(const struct led_state* state, bool on) {
+    if (state->mode == MODE_OFF || (state->mode == MODE_BLINK && !on))
+        return write_color(0, 0, 0);
+    return write_color(state->red, state->green, state->blue);
 }
 
 static bool read_file(const char* path, char* buf, size_t size) {
@@ -132,19 +127,28 @@ static struct led_state wanted_led(void) {
 
 int main(void) {
     struct led_state current = {0, 0, 0, MODE_OFF};
-    bool applied = false;
+    bool applied = false, on = true;
+    int tick = 0;
 
     while (true) {
-        struct led_state led = wanted_led();
+        if (tick++ % UPDATE_INTERVAL_SEC == 0) {
+            struct led_state led = wanted_led();
 
-        if (!applied || memcmp(&led, &current, sizeof(led))) {
-            LOG_INFO("LED r=%d g=%d b=%d mode=%d\n", led.red, led.green, led.blue, led.mode);
-            if (set_led(&led)) {
+            if (!applied || memcmp(&led, &current, sizeof(led))) {
+                LOG_INFO("LED r=%d g=%d b=%d mode=%d\n", led.red, led.green, led.blue,
+                         led.mode);
                 current = led;
-                applied = true;
+                applied = false;
+                on = true;
             }
         }
-        sleep(UPDATE_INTERVAL_SEC);
+
+        // Blink at 1 s on, 1 s off; set a steady color once
+        if (current.mode == MODE_BLINK || !applied) {
+            if (set_led(&current, on)) applied = true;
+            on = !on;
+        }
+        sleep(1);
     }
     return 0;
 }

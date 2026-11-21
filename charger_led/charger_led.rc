@@ -6,14 +6,14 @@ service vendor.charger_led /vendor/bin/charger_led
     oneshot
     disabled
 
-# Off-mode charging does not run early-boot, where init.ef71.rc hands the
-# LP5523 channels to system
+# Off-mode charging does not run early-boot, where init.ef71.rc loads the
+# LP5523 driver and hands its channels to system
 on charger
+    exec u:r:vendor_modprobe:s0 -- /vendor/bin/modprobe -a -d /vendor/lib/modules leds-lp5523
     chown system system /sys/class/leds/lp5523:channel0/brightness
     chown system system /sys/class/leds/lp5523:channel1/brightness
     chown system system /sys/class/leds/lp5523:channel2/brightness
     chown system system /sys/class/leds/lp5523:channel3/brightness
     chown system system /sys/class/leds/lp5523:channel6/brightness
     chown system system /sys/class/leds/lp5523:channel7/brightness
-    chown system system /sys/class/leds/lp5523:channel8/brightness
     start vendor.charger_led

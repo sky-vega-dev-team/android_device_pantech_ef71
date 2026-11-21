@@ -162,7 +162,8 @@ on post-fs
     # Korean carriers attach on the IMS APN (see init.ef71.apn.sh)
     mount none /vendor/etc/ef71_apns-conf.xml /product/etc/apns-conf.xml bind
 
-on early-boot
+# After early-boot, which loads the LP5523 driver
+on boot
     # LP5523 notification and key LEDs
     chown system system /sys/class/leds/red/brightness
     chown system system /sys/class/leds/red/blink
@@ -186,8 +187,6 @@ on early-boot
     chown system radio /sys/class/leds/lp5523:channel6/brightness
     chmod 0660 /sys/class/leds/lp5523:channel7/brightness
     chown system radio /sys/class/leds/lp5523:channel7/brightness
-    chmod 0660 /sys/class/leds/lp5523:channel8/brightness
-    chown system radio /sys/class/leds/lp5523:channel8/brightness
     chmod 0660 /dev/led_fops
     chown system radio /dev/led_fops
 
@@ -225,7 +224,7 @@ on early-boot
         apr q6core q6afe q6afe-dai q6afe-clocks q6asm q6asm-dai q6adm q6routing \
         soundwire-qcom snd-soc-wsa881x snd-soc-wcd9335 snd-soc-apq8096 \
         nq-nci \
-        leds-qcom-flash-v1
+        leds-qcom-flash-v1 leds-lp5523
     # The sensor daemon hands the registry from persist to the ADSP, which
     # reports no sensors until then: get it going before the HAL asks
     start vendor.sensors.qti
