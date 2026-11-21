@@ -237,3 +237,14 @@ service vendor.wlan_mac /vendor/bin/init.ef71.wlan_mac.sh
     capabilities NET_ADMIN
     oneshot
     disabled
+
+# Venus V4L2 Codec2 HAL: run the 64-bit service, in the camera group that owns
+# the /dev/video* nodes the Venus codecs share with the camera
+service android-hardware-media-c2-v4l2-hal-1-2 /vendor/bin/hw/android.hardware.media.c2@1.2-service-v4l2-64
+    override
+    class hal
+    user media
+    group mediadrm drmrpc camera
+    ioprio rt 4
+    task_profiles ProcessCapacityHigh
+    setenv MESA_GLSL_CACHE_DISABLE 1

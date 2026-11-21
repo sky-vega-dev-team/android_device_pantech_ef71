@@ -289,6 +289,23 @@ PRODUCT_COPY_FILES += \
 PRODUCT_VENDOR_PROPERTIES += \
     debug.c2.use_dmabufheaps=1
 
+# Video: the Venus codecs of the mainline kernel through the V4L2 Codec2 HAL.
+# Their codec list, media/media_codecs_c2_venus.xml, goes to
+# $(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_c2.xml once decoding is clean.
+PRODUCT_SOONG_NAMESPACES += external/v4l2_codec2
+
+EF71_PRODUCT_PACKAGES += \
+    android.hardware.media.c2@1.2-service-v4l2 \
+    libc2plugin_store
+
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/seccomp/android.hardware.media.c2-extended-seccomp_policy:$(TARGET_COPY_OUT_VENDOR)/etc/seccomp_policy/android.hardware.media.c2-extended-seccomp_policy
+
+PRODUCT_VENDOR_PROPERTIES += \
+    ro.vendor.v4l2_codec2.decode_concurrent_instances=8 \
+    ro.vendor.v4l2_codec2.encode_concurrent_instances=8 \
+    debug.stagefright.c2-poolmask=0xf50000
+
 EF71_PRODUCT_PACKAGES += \
     libavservices_minijail.vendor
 
