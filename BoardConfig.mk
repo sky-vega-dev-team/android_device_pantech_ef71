@@ -59,7 +59,7 @@ TARGET_KERNEL_CLANG_VERSION := r510928
 KERNEL_CC := CC=clang
 TARGET_KERNEL_SOURCE := kernel/pantech/msm8937
 TARGET_KERNEL_CONFIG := \
-    msm8916_defconfig \
+    msm8937_defconfig \
     ef71.config
 
 # ANT
