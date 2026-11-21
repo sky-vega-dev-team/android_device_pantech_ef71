@@ -21,6 +21,10 @@
      ports form one multi-channel group, and one that nobody drains
      overflows and stalls the others. The mono outputs therefore route only
      SLIM RX0.
+
+     The input device paths own AMIC MUX8. TinyHAL applies them only when
+     the input device changes, so the stream paths must leave it alone, or
+     every recording after the first would read a disconnected ADC.
 -->
 <audiohal>
     <mixer card="0">
@@ -55,7 +59,6 @@
             <ctl name="MultiMedia2 Mixer SLIMBUS_0_TX" val="0"/>
             <ctl name="AIF1_CAP Mixer SLIM TX8" val="0"/>
             <ctl name="SLIM TX8 MUX" val="ZERO"/>
-            <ctl name="AMIC MUX8" val="ZERO"/>
         </path>
     </device>
 
