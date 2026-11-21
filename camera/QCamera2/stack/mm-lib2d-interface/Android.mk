@@ -14,12 +14,12 @@ ifneq ($(TARGET_KERNEL_VERSION),$(filter $(TARGET_KERNEL_VERSION),3.18 4.4 4.9))
     LOCAL_C_INCLUDES += $(LIBION_HEADER_PATHS)
   else
     LOCAL_C_INCLUDES += \
-            $(TOP)/system/core/libion/include \
-            $(TOP)/system/core/libion/kernel-headers
+            $(TOP)/system/memory/libion/include \
+            $(TOP)/system/memory/libion/kernel-headers
   endif
 endif
 
-LOCAL_HEADER_LIBRARIES := generated_kernel_headers
+LOCAL_HEADER_LIBRARIES := ef71_camera_kernel_headers
 
 IMGLIB_HEADER_PATH := $(TARGET_OUT_INTERMEDIATES)/include/mm-camera/imglib
 

@@ -1,0 +1,10 @@
+// The kernel interfaces the camera HAL builds against: the uapi of the
+// camera_v2 stack (copies of include/uapi/media/*-legacy-m.h of the
+// kernel), the msm ION heap ids and the venus buffer layout. The whole
+// kernel header set does not fit 32-bit modules: the arm64 uapi uses
+// __u128, which 32-bit builds lack.
+cc_library_headers {
+    name: "ef71_camera_kernel_headers",
+    vendor: true,
+    export_include_dirs: ["."],
+}

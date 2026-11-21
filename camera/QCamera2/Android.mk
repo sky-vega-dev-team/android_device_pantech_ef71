@@ -94,6 +94,7 @@ LOCAL_C_INCLUDES := \
         $(LOCAL_PATH)/stack/mm-camera-interface/inc \
         $(LOCAL_PATH)/util \
         $(LOCAL_PATH)/HAL3 \
+        external/minigbm/cros_gralloc \
         hardware/libhardware/include/hardware \
         $(call project-path-for,qcom-media)/libstagefrighthw \
         $(call project-path-for,qcom-media)/mm-core/inc \
@@ -107,8 +108,8 @@ ifneq ($(TARGET_KERNEL_VERSION),$(filter $(TARGET_KERNEL_VERSION),3.18 4.4 4.9))
     LOCAL_C_INCLUDES += $(LIBION_HEADER_PATHS)
   else
     LOCAL_C_INCLUDES += \
-            system/core/libion/kernel-headers \
-            system/core/libion/include
+            system/memory/libion/kernel-headers \
+            system/memory/libion/include
   endif
 endif
 
@@ -117,7 +118,7 @@ LOCAL_C_INCLUDES += \
         $(LOCAL_PATH)/HAL
 
 ifeq ($(TARGET_COMPILE_WITH_MSM_KERNEL),true)
-LOCAL_HEADER_LIBRARIES := generated_kernel_headers
+LOCAL_HEADER_LIBRARIES := ef71_camera_kernel_headers
 endif
 ifeq ($(TARGET_TS_MAKEUP),true)
 LOCAL_CFLAGS += -DTARGET_TS_MAKEUP
