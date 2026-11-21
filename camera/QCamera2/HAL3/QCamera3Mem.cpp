@@ -40,6 +40,7 @@
 
 // Camera dependencies
 #include "QCamera3HWI.h"
+#include "QCamera3GrallocHandle.h"
 #include "QCamera3Mem.h"
 #include "QCameraTrace.h"
 
@@ -840,7 +841,8 @@ int QCamera3GrallocMemory::registerBuffer(buffer_handle_t *buffer,
     mBufferHandle[idx] = buffer;
     mPrivateHandle[idx] = (struct private_handle_t *)(*mBufferHandle[idx]);
 
-    setMetaData(mPrivateHandle[idx], UPDATE_COLOR_SPACE, &colorSpace);
+    if (isQtiHandle(*buffer))
+        setMetaData(mPrivateHandle[idx], UPDATE_COLOR_SPACE, &colorSpace);
 
 #ifndef TARGET_ION_ABI_VERSION
     mMemInfo[idx].main_ion_fd = open("/dev/ion", O_RDONLY);
@@ -852,7 +854,7 @@ int QCamera3GrallocMemory::registerBuffer(buffer_handle_t *buffer,
         ret = NO_MEMORY;
         goto end;
     } else {
-        ion_info_fd.fd = mPrivateHandle[idx]->fd;
+        ion_info_fd.fd = grallocHandleFd(*buffer);
 #ifndef TARGET_ION_ABI_VERSION
         if (ioctl(mMemInfo[idx].main_ion_fd,
                   ION_IOC_IMPORT, &ion_info_fd) < 0) {
@@ -863,14 +865,10 @@ int QCamera3GrallocMemory::registerBuffer(buffer_handle_t *buffer,
         }
 #endif //TARGET_ION_ABI_VERSION
     }
-    LOGD("idx = %d, fd = %d, size = %d, offset = %d",
-             idx, mPrivateHandle[idx]->fd,
-            mPrivateHandle[idx]->size,
-            mPrivateHandle[idx]->offset);
-    mMemInfo[idx].fd = mPrivateHandle[idx]->fd;
-    mMemInfo[idx].size =
-            ( /* FIXME: Should update ION interface */ size_t)
-            mPrivateHandle[idx]->size;
+    mMemInfo[idx].fd = grallocHandleFd(*buffer);
+    mMemInfo[idx].size = grallocHandleSize(*buffer);
+    LOGD("idx = %d, fd = %d, size = %zu", idx, mMemInfo[idx].fd,
+            mMemInfo[idx].size);
 #ifndef TARGET_ION_ABI_VERSION
     mMemInfo[idx].handle = ion_info_fd.handle;
 #else
@@ -883,6 +881,8 @@ int QCamera3GrallocMemory::registerBuffer(buffer_handle_t *buffer,
             MAP_SHARED,
             mMemInfo[idx].fd, 0);
     if (vaddr == MAP_FAILED) {
+        LOGE("mmap of buffer fd %d size %zu failed: %s", mMemInfo[idx].fd,
+                mMemInfo[idx].size, strerror(errno));
         mMemInfo[idx].handle = 0;
         ret = NO_MEMORY;
     } else {

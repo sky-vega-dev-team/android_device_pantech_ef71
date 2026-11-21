@@ -42,6 +42,7 @@
 #include <utils/Timers.h>
 
 // Camera dependencies
+#include "QCamera3GrallocHandle.h"
 #include "QCamera3Channel.h"
 #include "QCamera3HWI.h"
 #include "QCameraTrace.h"
@@ -3057,7 +3058,7 @@ void QCamera3PicChannel::jpegEvtHandle(jpeg_job_status_t status,
                         (buffer_handle_t *)obj->mMemory.getBufferHandle(bufIdx);
 
                 if (NULL != jpegBufferHandle) {
-                    maxJpegSize = ((private_handle_t*)(*jpegBufferHandle))->width;
+                    maxJpegSize = grallocHandleWidth(*jpegBufferHandle);
                     if (maxJpegSize > obj->mMemory.getSize(bufIdx)) {
                         maxJpegSize = obj->mMemory.getSize(bufIdx);
                     }
