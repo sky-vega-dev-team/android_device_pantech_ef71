@@ -125,11 +125,16 @@
         </path>
     </device>
 
-    <!-- Secondary microphone on AMIC4, biased by MIC BIAS3 -->
+    <!--
+         The camcorder records from the handset microphone as on the vendor
+         software, where AMIC4 only served as the second microphone of
+         speakerphone and noise suppression. Its own path on AMIC4 also
+         stayed applied to later recordings from the built-in microphone.
+    -->
     <device name="back mic">
         <path name="on">
-            <ctl name="AMIC MUX8" val="ADC4"/>
-            <ctl name="ADC4 Volume" val="14"/>
+            <ctl name="AMIC MUX8" val="ADC3"/>
+            <ctl name="ADC3 Volume" val="14"/>
         </path>
     </device>
 
