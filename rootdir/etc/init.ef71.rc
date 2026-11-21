@@ -223,7 +223,7 @@ on early-boot
         qcom_wcnss_pil wcnss_ctrl wcn36xx btqcomsmd \
         venus-core venus-dec venus-enc \
         apr q6core q6afe q6afe-dai q6afe-clocks q6asm q6asm-dai q6adm q6routing \
-        snd-soc-wcd9335 snd-soc-apq8096 \
+        soundwire-qcom snd-soc-wsa881x snd-soc-wcd9335 snd-soc-apq8096 \
         nq-nci
     # The sensor daemon hands the registry from persist to the ADSP, which
     # reports no sensors until then: get it going before the HAL asks
