@@ -283,6 +283,12 @@ PRODUCT_COPY_FILES += \
     frameworks/av/media/libstagefright/data/media_codecs_google_c2_audio.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_c2_audio.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_c2_video.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_c2_video.xml
 
+# Codec2: the camera stack brings up a legacy /dev/ion, which makes Codec2
+# pick its ION allocator, whose buffers it then fails to map. Keep it on the
+# DMA-BUF heaps.
+PRODUCT_VENDOR_PROPERTIES += \
+    debug.c2.use_dmabufheaps=1
+
 EF71_PRODUCT_PACKAGES += \
     libavservices_minijail.vendor
 
