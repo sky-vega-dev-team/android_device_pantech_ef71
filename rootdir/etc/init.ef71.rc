@@ -224,7 +224,8 @@ on early-boot
         venus-core venus-dec venus-enc \
         apr q6core q6afe q6afe-dai q6afe-clocks q6asm q6asm-dai q6adm q6routing \
         soundwire-qcom snd-soc-wsa881x snd-soc-wcd9335 snd-soc-apq8096 \
-        nq-nci
+        nq-nci \
+        leds-qcom-flash-v1
     # The sensor daemon hands the registry from persist to the ADSP, which
     # reports no sensors until then: get it going before the HAL asks
     start vendor.sensors.qti
