@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!--
-    The Venus decoders of the mainline kernel through the V4L2 Codec2 HAL.
-    The encoder is left out: it does not get through a session yet, and
-    recording goes through the Codec2 software encoder.
+    The Venus codecs of the mainline kernel through the V4L2 Codec2 HAL.
 -->
 <MediaCodecs>
     <Decoders>
@@ -37,4 +35,15 @@
             <Feature name="adaptive-playback" />
         </MediaCodec>
     </Decoders>
+    <Encoders>
+        <MediaCodec name="c2.v4l2.avc.encoder" type="video/avc">
+            <Limit name="size" min="96x64" max="1920x1088" />
+            <Limit name="alignment" value="2x2" />
+            <Limit name="block-size" value="16x16" />
+            <Limit name="block-count" range="1-8160" />
+            <Limit name="blocks-per-second" range="1-244800" />
+            <Limit name="bitrate" range="1-40000000" />
+            <Limit name="concurrent-instances" max="8" />
+        </MediaCodec>
+    </Encoders>
 </MediaCodecs>

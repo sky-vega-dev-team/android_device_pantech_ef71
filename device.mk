@@ -295,7 +295,7 @@ PRODUCT_VENDOR_PROPERTIES += \
 PRODUCT_VENDOR_PROPERTIES += \
     debug.stagefright.c2inputsurface=-1
 
-# Video: the Venus decoders of the mainline kernel through the V4L2 Codec2 HAL
+# Video: the Venus codecs of the mainline kernel through the V4L2 Codec2 HAL
 PRODUCT_SOONG_NAMESPACES += external/v4l2_codec2
 
 PRODUCT_COPY_FILES += \
