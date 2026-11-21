@@ -15,3 +15,7 @@ prlimit64: 1
 pselect6: 1
 statfs: 1
 sysinfo: 1
+# The buffer pool that recycles the output of byte buffer clients
+recvfrom: 1
+sendmsg: 1
+setsockopt: 1

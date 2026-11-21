@@ -295,10 +295,11 @@ PRODUCT_VENDOR_PROPERTIES += \
 PRODUCT_VENDOR_PROPERTIES += \
     debug.stagefright.c2inputsurface=-1
 
-# Video: the Venus codecs of the mainline kernel through the V4L2 Codec2 HAL.
-# Their codec list, media/media_codecs_c2_venus.xml, goes to
-# $(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_c2.xml once decoding is clean.
+# Video: the Venus decoders of the mainline kernel through the V4L2 Codec2 HAL
 PRODUCT_SOONG_NAMESPACES += external/v4l2_codec2
+
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/media/media_codecs_c2_venus.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_c2.xml
 
 EF71_PRODUCT_PACKAGES += \
     android.hardware.media.c2@1.2-service-v4l2 \
