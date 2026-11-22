@@ -19,3 +19,7 @@ sysinfo: 1
 recvfrom: 1
 sendmsg: 1
 setsockopt: 1
+# Mesa, which converts RGBA frames for the encoder on the GPU
+mkdirat: 1
+sched_getaffinity: 1
+sched_setscheduler: 1
